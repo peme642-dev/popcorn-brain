@@ -97,13 +97,12 @@ st.markdown("""
         border: 1px solid #E6B8C7;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #1B365D !important;
-        color: #FFFFFF !important;
+        background-color: #F5D6E0 !important;
+        color: #000000 !important;
     }
     .stTabs [aria-selected="true"] p {
-        color: #FFFFFF !important;
+        color: #000000 !important;
     }
-
     /* ĐỔI CHỮ Ô NHẬP TIN NHẮN VÀ CÂU TRẢ LỜI CỦA AI THÀNH MÀU ĐEN */
     .stChatInput textarea {
         color: #000000 !important;
