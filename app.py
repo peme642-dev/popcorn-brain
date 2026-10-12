@@ -253,11 +253,10 @@ with tab2:
                         3. PHẢI BẮN EMOJI NHIỆT TÌNH 🤪🍿📱⚡: Dùng văn phong Gen Z cực cháy ('keo lỳ', 'ét o ét', 'cháy quá', 'mấy ní',...) kết hợp thật nhiều emoji sinh động!
                         """
                         
-                        chat_history = []
-                        for msg in st.session_state.messages[:-1]:
-                            role = "model" if msg["role"] == "assistant" else "user"
-                            chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
-
+                       chat_history = []
+                    for msg in st.session_state.messages[:-1]:
+                        role = "model" if msg["role"] == "assistant" else "user"
+                        chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
                         chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
                         response = chat.send_message(prompt, config={'system_instruction': system_instruction})
                         
