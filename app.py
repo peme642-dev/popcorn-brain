@@ -237,14 +237,14 @@ with tab2:
 
         with st.chat_message("assistant"):
             if not client:
-                ai_reply = "⚠️ U là trời, bạn chưa điền API Key kìa! Hãy dán API Key thật của bạn vào biến `API_KEY_DEFAULT` ở đầu code nha."
+                ai_reply = "⚠️ U là trời 🤦‍♂️! Bạn chưa điền API Key kìa. Hãy cấu hình `GEMINI_API_KEY` trong Streamlit Secrets nha ✨!"
                 st.markdown(ai_reply)
                 st.session_state.messages.append({"role": "assistant", "content": ai_reply})
             else:
                 ai_reply = None
                 for attempt in range(3):
                     try:
-                       system_instruction = """
+                        system_instruction = """
                         Bạn là một trợ lý AI Gen Z chuyên gia chữa lành hội chứng "Popcorn Brain" (não bỏng ngô) cực kỳ thân thiện, lầy lội và tràn đầy năng lượng tích cực! 🔥✨
                         
                         QUY TẮC BẮT BUỘC:
@@ -253,15 +253,29 @@ with tab2:
                         3. PHẢI BẮN EMOJI NHIỆT TÌNH 🤪🍿📱⚡: Dùng văn phong Gen Z cực cháy ('keo lỳ', 'ét o ét', 'cháy quá', 'mấy ní',...) kết hợp thật nhiều emoji sinh động!
                         """
                         
-                       chat_history = []
-                    for msg in st.session_state.messages[:-1]:
-                        role = "model" if msg["role"] == "assistant" else "user"
-                        chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
-                        chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
+                        chat_history = []
+                        for msg in st.session_state.messages[:-1]:
+                            role = "model" if msg["role"] == "assistant" else "user"
+                            chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
+
+                        chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
                         response = chat.send_message(prompt, config={'system_instruction': system_instruction})
                         
                         ai_reply = response.text
                         break
+                    except Exception as e:
+                        if ("503" in str(e) or "UNAVAILABLE" in str(e)) and attempt < 2:
+                            time.sleep(2)
+                            continue
+                        elif "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                            ai_reply = "Ét o ét 😭! API Key đã chạm giới hạn miễn phí rồi. Hãy tạo API key mới tại Google AI Studio nhé ⚡!"
+                            break
+                        else:
+                            ai_reply = f"Ét o ét 😱, có lỗi xíu xiu rồi ní ơi: {e}"
+                            break
+                
+                st.markdown(ai_reply)
+                st.session_state.messages.append({"role": "assistant", "content": ai_reply})
                     except Exception as e:
                         if ("503" in str(e) or "UNAVAILABLE" in str(e)) and attempt < 2:
                             time.sleep(2)
