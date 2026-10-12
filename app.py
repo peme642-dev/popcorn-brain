@@ -183,6 +183,28 @@ with tab2:
     </div>
     """, unsafe_allow_html=True)
 
+    # === BẮT ĐẦU ĐOẠN KHUNG ĐẾM THỜI GIAN MỚI THÊM VÀO ===
+    with st.expander("⏱️ BỘ ĐẾM THỜI GIAN THỬ THÁCH (DIGITAL DETOX TIMER)"):
+        st.write("Chọn thời gian bạn muốn thử thách cất điện thoại hoặc tập trung chữa lành:")
+        col_t1, col_t2 = st.columns([2, 1])
+        with col_t1:
+            timer_minutes = st.selectbox("Chọn số phút:", [5, 10, 15, 20, 30], index=2)
+        with col_t2:
+            st.write("")
+            st.write("")
+            start_timer = st.button("Bắt đầu đếm ngược")
+
+        if start_timer:
+            timer_placeholder = st.empty()
+            total_seconds = timer_minutes * 60
+            while total_seconds > 0:
+                mins, secs = divmod(total_seconds, 60)
+                timer_placeholder.markdown(f"### ⏳ Thời gian thử thách còn lại: **{mins:02d}:{secs:02d}**")
+                time.sleep(1)
+                total_seconds -= 1
+            timer_placeholder.markdown("### 🎉 Xuất sắc! Bạn đã hoàn thành thử thách. Quay lại chat với AI ngay nào!")
+    # === KẾT THÚC ĐOẠN KHUNG ĐẾM THỜI GIAN ===
+
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
