@@ -3,7 +3,7 @@ from google import genai
 import time
 
 st.set_page_config(
-    page_title="Popcorn Brain | Nghiên cứu & Trợ lý AI",
+    page_title="Popcorn Brain | Chuyên gia AI tư vấn",
     page_icon="🧠",
     layout="wide"
 )
