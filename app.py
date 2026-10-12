@@ -135,11 +135,11 @@ client = genai.Client(
     vertexai=False
 )
 
-col_title, col_img = st.columns([3, 1])
-with col_title:
-    st.markdown("<h1 style='font-size: 2.8rem; margin-top: 15px;'>POPCORN BRAIN</h1>", unsafe_allow_html=True)
+col_img, col_title = st.columns([1, 3])
 with col_img:
     st.image("Cân bằng thế giới số và thực tế.png", width=220)
+with col_title:
+    st.markdown("<h1 style='font-size: 2.8rem; margin-top: 15px;'>POPCORN BRAIN</h1>", unsafe_allow_html=True)
 
 st.markdown("---")
 
