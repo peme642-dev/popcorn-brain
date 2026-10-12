@@ -255,9 +255,254 @@ with tab2:
                         4. Khi người dùng nhắn lại xác nhận đã làm xong (ví dụ: "xong rồi", "đã làm"), bạn mới được tiếp tục khen ngợi và đưa ra bước tiếp theo.
                         """
                         
+                       import streamlit as st
+from google import genai
+import time
+
+# 1. Cấu hình trang web
+st.set_page_config(
+    page_title="Popcorn Brain | Nghiên cứu & Trợ lý AI",
+    page_icon="🧠",
+    layout="wide"
+)
+
+# 2. Nhúng Custom CSS
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #FBF9F1; 
+        color: #1B365D; 
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    [data-testid="stSidebar"] {
+        display: none;
+    }
+    h1, h2, h3, h4 {
+        color: #1B365D !important;
+        font-weight: 800 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .nguyen-nhan-title {
+        color: #1B365D !important;
+        font-weight: 800 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+    }
+    .stMainBlockContainer div[data-testid="stExpander"] {
+        background-color: #F5D6E0 !important; 
+        border: 1px solid #E6B8C7 !important;
+        border-radius: 4px !important;
+        margin-bottom: 8px !important;
+    }
+    .stMainBlockContainer div[data-testid="stExpander"] summary {
+        color: #1B365D !important; 
+        font-weight: 700 !important; 
+        font-size: 13px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 10px 14px !important;
+    }
+    .stMainBlockContainer div[data-testid="stExpander"][aria-expanded="true"] {
+        background-color: #F0C4D3 !important;
+    }
+    .stMainBlockContainer div[data-testid="stExpander"] [data-testid="stExpanderDetails"] {
+        background-color: #F0C4D3 !important; 
+        color: #000000 !important;          
+        border-top: 1px solid #E6B8C7 !important;
+        padding: 14px !important;
+        font-size: 0.95rem !important;
+        line-height: 1.6 !important;
+        font-weight: 500 !important;
+    }
+    .expert-card {
+        background-color: #F5D6E0;
+        padding: 24px;
+        border-radius: 6px;
+        margin-top: 20px;
+        margin-bottom: 25px;
+        border-left: 6px solid #1B365D;
+        border-top: 1px solid #E6B8C7;
+        border-right: 1px solid #E6B8C7;
+        border-bottom: 1px solid #E6B8C7;
+        text-align: center;
+    }
+    .expert-card p {
+        color: #1B365D !important;
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1.6;
+    }
+    .intro-text {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        margin-bottom: 18px;
+        text-align: justify;
+        color: #1B365D;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+        background-color: transparent;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background-color: #F5D6E0 !important;
+        color: #1B365D !important;
+        border-radius: 6px 6px 0 0;
+        font-weight: 700;
+        padding: 12px 24px;
+        border: 1px solid #E6B8C7;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #1B365D !important;
+        color: #FFFFFF !important;
+    }
+    .stTabs [aria-selected="true"] p {
+        color: #FFFFFF !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# 3. ĐIỀN API KEY CỦA BẠN VÀO ĐÂY
+API_KEY_DEFAULT = "AIzaSy..."  # Thay "AIzaSy..." bằng mã API Key thật của bạn
+
+client = genai.Client(api_key=API_KEY_DEFAULT) if API_KEY_DEFAULT and API_KEY_DEFAULT != "AIzaSy..." else None
+
+# 4. Tiêu đề chung của trang
+st.markdown("<h1 style='font-size: 3rem; margin-bottom: 10px;'>POPCORN BRAIN</h1>", unsafe_allow_html=True)
+st.markdown("---")
+
+# 5. Tạo hệ thống 2 Tab
+tab1, tab2 = st.tabs(["📌 NỘI DUNG NGHIÊN CỨU", "💬 TƯ VẤN CÙNG CHUYÊN GIA AI"])
+
+with tab1:
+    st.markdown("""
+    <div class="intro-text">
+    Thuật ngữ <b>"Popcorn Brain"</b> được nhà nghiên cứu David M. Levy (Đại học Washington, Hoa Kỳ) đưa ra lần đầu vào năm 2011, sử dụng để mô tả trạng thái con người trở nên quen thuộc với việc tiếp nhận các kích thích số nhanh, liên tục và đa dạng đến mức khó duy trì sự chú ý đối với những hoạt động có nhịp độ chậm hơn, đòi hỏi sự tập trung và suy nghĩ sâu.
+    </div>
+
+    <div class="intro-text">
+    Trong những năm gần đây, cùng với sự phát triển của điện thoại thông minh, mạng xã hội, video ngắn và các nền tảng số, khái niệm "hội chứng não bỏng ngô" ngày càng được nhắc đến trong các nghiên cứu, các phương tiện truyền thông và các cuộc thảo luận về sức khỏe tinh thần trong thời đại số.
+    </div>
+
+    <div class="intro-text">
+    Cần nhấn mạnh rằng, hiện nay "hội chứng não bỏng ngô" chưa được công nhận là một bệnh lý hay một rối loạn tâm thần chính thức trong các hệ thống phân loại bệnh quốc tế. Thuật ngữ này chủ yếu được sử dụng để mô tả một nhóm biểu hiện về nhận thức và hành vi có thể xuất hiện khi con người thường xuyên tiếp xúc với các kích thích số có cường độ cao và thay đổi liên tục.
+    </div>
+
+    <div class="intro-text">
+    <b>Trong phạm vi đề tài này, "hội chứng não bỏng ngô" được hiểu là:</b><br>
+    <i>Hiện tượng học sinh có xu hướng khó duy trì sự chú ý đối với các hoạt động cần tập trung kéo dài, dễ mất kiên nhẫn, thường xuyên tìm kiếm các kích thích mới, cảm thấy bồn chồn khi thiếu các hoạt động giải trí số và gặp khó khăn trong việc tự điều chỉnh hành vi sử dụng công nghệ.</i>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown('<div class="nguyen-nhan-title">NGUYÊN NHÂN HÌNH THÀNH</div>', unsafe_allow_html=True)
+        
+        with st.expander("TẦN SUẤT TIẾP XÚC VỚI CÁC KÍCH THÍCH SỐ NHANH VÀ LIÊN TỤC"):
+            st.write("Việc thường xuyên tiếp xúc với video ngắn, nội dung được cập nhật liên tục và các thông báo tức thời có thể làm gia tăng xu hướng tìm kiếm sự mới lạ và phản hồi nhanh.")
+
+        with st.expander("THÓI QUEN SỬ DỤNG ĐIỆN THOẠI CHO MỤC ĐÍCH GIẢI TRÍ"):
+            st.write("Việc sử dụng điện thoại trong thời gian dài, đặc biệt là các hoạt động giải trí có tính kích thích cao, có thể liên quan đến khả năng duy trì sự chú ý và tự điều chỉnh hành vi.")
+
+        with st.expander("KHẢ NĂNG TỰ ĐIỀU CHỈNH HÀNH VI"):
+            st.write("Những học sinh có kỹ năng tự nhận thức, tự giám sát và tự kiểm soát hành vi tốt hơn có thể thích ứng hiệu quả hơn với môi trường số và giảm nguy cơ xuất hiện các biểu hiện của 'hội chứng não bỏng ngô'.")
+
+        with st.expander("MỨC ĐỘ THAM GIA CÁC HOẠT ĐỘNG NGOÀI MÔI TRƯỜNG SỐ"):
+            st.write("Việc tham gia các hoạt động thể chất, hoạt động trải nghiệm, hoạt động xã hội và các sở thích cá nhân có thể tạo cơ hội để học sinh duy trì sự tập trung, phát triển các mối quan hệ trực tiếp và cân bằng việc sử dụng công nghệ.")
+
+    with col2:
+        st.markdown('<div class="nguyen-nhan-title">BIỂU HIỆN</div>', unsafe_allow_html=True)
+        
+        with st.expander("KHÓ DUY TRÌ SỰ CHÚ Ý ĐỐI VỚI CÁC NHIỆM VỤ KÉO DÀI"):
+            st.write("Học sinh dễ mất tập trung khi thực hiện các hoạt động cần sự tập trung liên tục như đọc tài liệu dài, giải quyết vấn đề, làm bài tập hoặc tham gia các hoạt động học tập kéo dài.")
+
+        with st.expander("DỄ MẤT KIÊN NHẪN"):
+            st.write("Học sinh mong muốn nhận được kết quả hoặc phản hồi nhanh, gặp khó khăn khi phải chờ đợi hoặc thực hiện các nhiệm vụ cần đầu tư thời gian và nỗ lực.")
+
+        with st.expander("THƯỜNG XUYÊN TÌM KIẾM CÁC KÍCH THÍCH MỚI"):
+            st.write("Học sinh có xu hướng liên tục kiểm tra điện thoại, chuyển đổi giữa nhiều ứng dụng, nội dung hoặc hoạt động khác nhau trong thời gian ngắn.")
+
+        with st.expander("CẢM GIÁC BỒN CHỒN KHI THIẾU KÍCH THÍCH SỐ"):
+            st.write("Học sinh cảm thấy khó chịu, bứt rứt hoặc có nhu cầu cầm điện thoại ngay khi không có hoạt động giải trí số.")
+
+        with st.expander("KHÓ TỰ ĐIỀU CHỈNH HÀNH VI SỬ DỤNG CÔNG NGHỆ"):
+            st.write("Học sinh nhận thức được việc sử dụng điện thoại quá nhiều nhưng gặp khó khăn trong việc kiểm soát, cắt giảm hoặc thay đổi hành vi.")
+
+    st.markdown("<br><h2>ĐÔI LỜI CHUYÊN GIA AI MUỐN GỬI ĐẾN BẠN</h2>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="intro-text">
+    <i>"Hãy học cách buông bỏ thiết bị công nghệ đúng lúc, dành thời gian cho những khoảng lặng tĩnh tâm và trân trọng từng khoảnh khắc trong thế giới thực. Sự tập trung sâu sắc chính là siêu năng lực giúp bạn làm chủ tri thức và cuộc sống của chính mình."</i>
+    </div>
+    """, unsafe_allow_html=True)
+    st.image("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200", caption="Cân bằng cuộc sống số và thế giới thực", use_container_width=True)
+
+
+with tab2:
+    st.markdown("""
+    <div class="expert-card">
+        <p>Nếu bạn muốn trò chuyện về vấn đề "não bỏng ngô" hoặc giải pháp để khắc phục nó thì hãy đến với chuyên gia Gen Z của chúng tôi</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    if prompt := st.chat_input('Hé lô! Cần chuyên gia Gen Z tư vấn gì về "não bỏng ngô" không?'):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        with st.chat_message("assistant"):
+            if not client:
+                ai_reply = "⚠️ U là trời, bạn chưa điền API Key kìa! Hãy dán API Key thật của bạn vào biến `API_KEY_DEFAULT` ở đầu code nha."
+                st.markdown(ai_reply)
+                st.session_state.messages.append({"role": "assistant", "content": ai_reply})
+            else:
+                ai_reply = None
+                for attempt in range(3):
+                    try:
+                        system_instruction = """
+                        Bạn là một trợ lý AI Gen Z chuyên gia chữa lành hội chứng "Popcorn Brain" (não bỏng ngô) cực kỳ thân thiện, hài hước và lầy lội. 
+                        QUY TẮC BẮT BUỘC KHI TƯ VẤN KHẮC PHỤC:
+                        1. Khi người dùng yêu cầu hướng dẫn khắc phục hoặc chữa lành, bạn **CHỈ ĐƯỢC PHÉP** đưa ra **đúng MỘT bước đầu tiên** (Ví dụ: Cách 1: Cai nghiện digital detox, cất điện thoại).
+                        2. Viết ngắn gọn, dùng từ lóng Gen Z ('keo lỳ', 'ét o ét', 'cháy quá',...) và yêu cầu người dùng thực hiện xong thì nhắn lại (Ví dụ: "Làm xong bước này rồi hú tui nha mấy ní!").
+                        3. Tuyệt đối **không** tuôn ra tất cả các cách cùng một lúc.
+                        4. Khi người dùng nhắn lại xác nhận đã làm xong (ví dụ: "xong rồi", "đã làm"), bạn mới được tiếp tục khen ngợi và đưa ra bước tiếp theo.
+                        """
+                        
                         chat_history = []
                         for msg in st.session_state.messages[:-1]:
-                            chat_history.append({"role": msg["role"], "parts": [{"text": msg["content"]}]})
+                            role = "model" if msg["role"] == "assistant" else "user"
+                            chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
+
+                        chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
+                        response = chat.send_message(prompt, config={'system_instruction': system_instruction})
+                        
+                        ai_reply = response.text
+                        break
+                    except Exception as e:
+                        if ("503" in str(e) or "UNAVAILABLE" in str(e)) and attempt < 2:
+                            time.sleep(2)
+                            continue
+                        elif "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                            ai_reply = "Ét o ét, API Key đã chạm giới hạn miễn phí. Hãy tạo API key mới tại Google AI Studio nhé!"
+                            break
+                        else:
+                            ai_reply = f"Ét o ét, có lỗi xíu xiu: {e}"
+                            break
+                
+                st.markdown(ai_reply)
+                st.session_state.messages.append({"role": "assistant", "content": ai_reply})
 
                         chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
                         response = chat.send_message(prompt, config={'system_instruction': system_instruction})
