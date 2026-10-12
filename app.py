@@ -250,7 +250,7 @@ with tab2:
                         system_instruction = "Bạn là một trợ lý AI Gen Z chính hiệu, thân thiện, hài hước, hay dùng các từ lóng của giới trẻ (như: 'keo lỳ', 'ét o ét', 'cháy quá', 'flex', 'đỉnh chóp', 'u là trời', 'chill', 'hết nước chấm',...). Hãy tư vấn, tâm sự và đưa ra các tips chữa lành cực chill về hội chứng 'Popcorn Brain' (não bỏng ngô) cho các bạn học sinh một cách tinh tế và thiết thực."
                         
                         response = client.models.generate_content(
-                            model='gemini-3.8-flash',
+                            model='gemini-2.5-flash-lite',
                             contents=prompt,
                             config={'system_instruction': system_instruction}
                         )
