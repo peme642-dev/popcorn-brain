@@ -100,7 +100,7 @@ st.markdown("""
         background-color: #1B365D !important;
         color: #FFFFFF !important;
     }
-   .stTabs [aria-selected="true"] p {
+    .stTabs [aria-selected="true"] p {
         color: #FFFFFF !important;
     }
 
@@ -124,13 +124,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. ĐIỀN API KEY CỦA BẠN VÀO ĐÂY
+# CẤU HÌNH API KEY
 API_KEY = st.secrets.get("GEMINI_API_KEY", "").strip()
 
 if not API_KEY:
-    st.error("Chưa cấu hình GEMINI_API_KEY.")
+    st.error("Chưa cấu hình GEMINI_API_KEY trong Streamlit Secrets.")
     st.stop()
-
 
 client = genai.Client(
     api_key=API_KEY,
@@ -197,11 +196,11 @@ with tab1:
 with tab2:
     st.markdown("""
     <div class="expert-card">
-        <p>Nếu bạn muốn trò chuyện về vấn đề "não bỏng ngô" hoặc giải pháp để khắc phục nó thì hãy đến với chuyên gia Gen Z của chúng tôi</p>
+        <p>Nếu bạn muốn trò chuyện về vấn đề "não bỏng ngô" hoặc giải pháp để khắc phục nó thì hãy đến với chuyên gia Gen Z của chúng tôi ✨🍿</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # === BẮT ĐẦU ĐOẠN KHUNG ĐẾM THỜI GIAN MỚI THÊM VÀO ===
+    # Khung đếm thời gian
     with st.expander("⏱️ BỘ ĐẾM THỜI GIAN THỬ THÁCH (DIGITAL DETOX TIMER)"):
         st.write("Chọn thời gian bạn muốn thử thách cất điện thoại hoặc tập trung chữa lành:")
         col_t1, col_t2 = st.columns([2, 1])
@@ -210,18 +209,17 @@ with tab2:
         with col_t2:
             st.write("")
             st.write("")
-            start_timer = st.button("Bắt đầu đếm ngược")
+            start_timer = st.button("🚀 Bắt đầu đếm ngược")
 
         if start_timer:
             timer_placeholder = st.empty()
             total_seconds = timer_minutes * 60
             while total_seconds > 0:
                 mins, secs = divmod(total_seconds, 60)
-                timer_placeholder.markdown(f"### ⏳ Thời gian thử thách còn lại: **{mins:02d}:{secs:02d}**")
+                timer_placeholder.markdown(f"### ⏳ Thời gian thử thách còn lại: **{mins:02d}:{secs:02d}** 🔥")
                 time.sleep(1)
                 total_seconds -= 1
-            timer_placeholder.markdown("### 🎉 Xuất sắc! Bạn đã hoàn thành thử thách. Quay lại chat với AI ngay nào!")
-    # === KẾT THÚC ĐOẠN KHUNG ĐẾM THỜI GIAN ===
+            timer_placeholder.markdown("### 🎉 🥳 Xuất sắc đỉnh chóp! Bạn đã hoàn thành thử thách. Quay lại chat với AI ngay nào! 💅✨")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -230,7 +228,7 @@ with tab2:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    if prompt := st.chat_input('Hé lô! Cần chuyên gia Gen Z tư vấn gì về "não bỏng ngô" không?'):
+    if prompt := st.chat_input('Hé lô! Cần chuyên gia Gen Z tư vấn gì về "não bỏng ngô" không? 🍿🔥'):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -258,7 +256,7 @@ with tab2:
                             role = "model" if msg["role"] == "assistant" else "user"
                             chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
 
-                        chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
+                        chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
                         response = chat.send_message(prompt, config={'system_instruction': system_instruction})
                         
                         ai_reply = response.text
@@ -272,19 +270,6 @@ with tab2:
                             break
                         else:
                             ai_reply = f"Ét o ét 😱, có lỗi xíu xiu rồi ní ơi: {e}"
-                            break
-                
-                st.markdown(ai_reply)
-                st.session_state.messages.append({"role": "assistant", "content": ai_reply})
-                    except Exception as e:
-                        if ("503" in str(e) or "UNAVAILABLE" in str(e)) and attempt < 2:
-                            time.sleep(2)
-                            continue
-                        elif "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                            ai_reply = "Ét o ét, API Key đã chạm giới hạn miễn phí. Hãy tạo API key mới tại Google AI Studio nhé!"
-                            break
-                        else:
-                            ai_reply = f"Ét o ét, có lỗi xíu xiu: {e}"
                             break
                 
                 st.markdown(ai_reply)
