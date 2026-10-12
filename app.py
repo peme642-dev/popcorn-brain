@@ -244,24 +244,36 @@ with tab2:
                 st.session_state.messages.append({"role": "assistant", "content": ai_reply})
             else:
                 ai_reply = None
-                # Cơ chế tự động thử lại tối đa 3 lần nếu máy chủ bận (503)
                 for attempt in range(3):
                     try:
-                        system_instruction = "Bạn là một trợ lý AI Gen Z chính hiệu, thân thiện, hài hước, hay dùng các từ lóng của giới trẻ (như: 'keo lỳ', 'ét o ét', 'cháy quá', 'flex', 'đỉnh chóp', 'u là trời', 'chill', 'hết nước chấm',...). Hãy tư vấn, tâm sự và đưa ra các tips chữa lành cực chill về hội chứng 'Popcorn Brain' (não bỏng ngô) cho các bạn học sinh một cách tinh tế và thiết thực."
+                        system_instruction = """
+                        Bạn là một trợ lý AI Gen Z chuyên gia chữa lành hội chứng "Popcorn Brain" (não bỏng ngô) cực kỳ thân thiện, hài hước và lầy lội. 
+                        QUY TẮC BẮT BUỘC KHI TƯ VẤN KHẮC PHỤC:
+                        1. Khi người dùng yêu cầu hướng dẫn khắc phục hoặc chữa lành, bạn **CHỈ ĐƯỢC PHÉP** đưa ra **đúng MỘT bước đầu tiên** (Ví dụ: Cách 1: Cai nghiện digital detox, cất điện thoại).
+                        2. Viết ngắn gọn, dùng từ lóng Gen Z ('keo lỳ', 'ét o ét', 'cháy quá',...) và yêu cầu người dùng thực hiện xong thì nhắn lại (Ví dụ: "Làm xong bước này rồi hú tui nha mấy ní!").
+                        3. Tuyệt đối **không** tuôn ra tất cả các cách cùng một lúc.
+                        4. Khi người dùng nhắn lại xác nhận đã làm xong (ví dụ: "xong rồi", "đã làm"), bạn mới được tiếp tục khen ngợi và đưa ra bước tiếp theo.
+                        """
                         
-                        response = client.models.generate_content(
-                            model='gemini-3.5-flash-lite',
-                            contents=prompt,
-                            config={'system_instruction': system_instruction}
-                        )
+                        chat_history = []
+                        for msg in st.session_state.messages[:-1]:
+                            chat_history.append({"role": msg["role"], "parts": [{"text": msg["content"]}]})
+
+                        chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
+                        response = chat.send_message(prompt, config={'system_instruction': system_instruction})
+                        
                         ai_reply = response.text
                         break
                     except Exception as e:
                         if ("503" in str(e) or "UNAVAILABLE" in str(e)) and attempt < 2:
-                            time.sleep(2)  # Đợi 2 giây rồi tự động gọi lại
+                            time.sleep(2)
                             continue
+                        elif "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                            ai_reply = "Ét o ét, API Key đã chạm giới hạn miễn phí. Hãy tạo API key mới tại Google AI Studio nhé!"
+                            break
                         else:
-                            ai_reply = f"Ét o ét, máy chủ đang quá tải tạm thời, bạn gửi lại tin nhắn giúp mình nha! (Lỗi: {e})"
+                            ai_reply = f"Ét o ét, có lỗi xíu xiu: {e}"
+                            break
                 
                 st.markdown(ai_reply)
                 st.session_state.messages.append({"role": "assistant", "content": ai_reply})
