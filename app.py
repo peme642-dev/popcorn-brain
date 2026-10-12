@@ -259,7 +259,7 @@ with tab2:
                         for msg in st.session_state.messages[:-1]:
                             chat_history.append({"role": msg["role"], "parts": [{"text": msg["content"]}]})
 
-                        chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
+                        chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
                         response = chat.send_message(prompt, config={'system_instruction': system_instruction})
                         
                         ai_reply = response.text
