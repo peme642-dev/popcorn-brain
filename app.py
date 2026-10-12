@@ -100,8 +100,26 @@ st.markdown("""
         background-color: #1B365D !important;
         color: #FFFFFF !important;
     }
-    .stTabs [aria-selected="true"] p {
+   .stTabs [aria-selected="true"] p {
         color: #FFFFFF !important;
+    }
+
+    /* ĐỔI CHỮ Ô NHẬP TIN NHẮN VÀ CÂU TRẢ LỜI CỦA AI THÀNH MÀU ĐEN */
+    .stChatInput textarea {
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+    }
+    .stChatInput textarea::placeholder {
+        color: #333333 !important;
+        -webkit-text-fill-color: #333333 !important;
+    }
+    [data-testid="stChatMessage"] {
+        color: #000000 !important;
+    }
+    [data-testid="stChatMessage"] p, 
+    [data-testid="stChatMessage"] li, 
+    [data-testid="stChatMessage"] span {
+        color: #000000 !important;
     }
     </style>
 """, unsafe_allow_html=True)
