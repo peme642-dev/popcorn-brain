@@ -113,9 +113,11 @@ if not API_KEY:
     st.error("Chưa cấu hình GEMINI_API_KEY.")
     st.stop()
 
+
 client = genai.Client(
     api_key=API_KEY,
     vertexai=False
+)
 
 st.markdown("<h1 style='font-size: 3rem; margin-bottom: 10px;'>POPCORN BRAIN</h1>", unsafe_allow_html=True)
 st.markdown("---")
