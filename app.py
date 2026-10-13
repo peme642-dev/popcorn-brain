@@ -169,67 +169,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("---")
-# HIỆU ỨNG TRƯỢT RA KHI CUỘN XUỐNG ĐẾN KHU VỰC NÀY
-st.markdown("""
-    <style>
-    .scroll-reveal-container {
-        width: 100%;
-        overflow: hidden;
-        padding: 30px 0;
-        background: transparent;
-        margin-bottom: 15px;
-    }
-    
-    .scroll-reveal-box {
-        display: inline-block;
-        background-color: #1A1A1A; /* Nền khối màu đen */
-        color: #FFFFFF;            /* Chữ màu trắng */
-        padding: 12px 28px;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: 3rem;
-        font-weight: 900;
-        text-transform: uppercase;
-        /* Trạng thái ban đầu: dịch chuyển sang trái và ẩn đi */
-        transform: skew(-15deg) translateX(-120px);
-        opacity: 0;
-        transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 4px 4px 0px #E6B8C7;
-        letter-spacing: 2px;
-    }
 
-    /* Trạng thái khi cuộn tới: trượt về vị trí cũ và hiện rõ */
-    .scroll-reveal-box.active {
-        transform: skew(-15deg) translateX(0);
-        opacity: 1;
-    }
-    </style>
-
-    <div class="scroll-reveal-container" id="reveal-section">
-        <div class="scroll-reveal-box" id="reveal-box">
-            POPCORN BRAIN 🍿
-        </div>
-    </div>
-
-    <script>
-    (function() {
-        const box = document.getElementById('reveal-box');
-        const section = document.getElementById('reveal-section');
-        if (!box || !section) return;
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    box.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        observer.observe(section);
-    })();
-    </script>
-""", unsafe_allow_html=True)
-
-st.markdown("---")
 tab1, tab2 = st.tabs(["📌 NỘI DUNG NGHIÊN CỨU", "💬 TƯ VẤN CÙNG CHUYÊN GIA AI"])
 
 with tab1:
