@@ -139,7 +139,38 @@ col_img, col_title = st.columns([1, 3])
 with col_img:
     st.image("Cân bằng thế giới số và thực tế.png", width=220)
 with col_title:
-    st.markdown("<h1 style='font-size: 2.8rem; margin-top: 15px;'>POPCORN BRAIN</h1>", unsafe_allow_html=True)
+    # HIỆU ỨNG CHỮ CHẠY QUA CHẠY LẠI (MARQUEE)
+st.markdown("""
+    <style>
+    .marquee-container {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        box-sizing: border-box;
+        background: transparent;
+        padding: 10px 0;
+        margin-bottom: 15px;
+    }
+    .marquee-text {
+        display: inline-block;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: #1B365D;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        animation: marquee 12s linear infinite alternate;
+    }
+    @keyframes marquee {
+        0% { transform: translateX(0%); }
+        100% { transform: translateX(40%); }
+    }
+    </style>
+
+    <div class="marquee-container">
+        <div class="marquee-text">POPCORN BRAIN 🍿🔥✨</div>
+    </div>
+""", unsafe_allow_html=True)
 
 st.markdown("---")
 
