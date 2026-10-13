@@ -1,6 +1,7 @@
 import streamlit as st
 from google import genai
 import time
+import re
 
 st.set_page_config(
     page_title="Popcorn Brain | Chuyên gia AI tư vấn",
@@ -120,6 +121,38 @@ st.markdown("""
     [data-testid="stChatMessage"] span {
         color: #000000 !important;
     }
+
+    /* HIỆU ỨNG KHỐI CHỮ ĐEN NGHIÊNG TRƯỢT RA */
+    @keyframes slideInFromLeft {
+        0% {
+            transform: skew(-15deg) translateX(-150px);
+            opacity: 0;
+        }
+        100% {
+            transform: skew(-15deg) translateX(0);
+            opacity: 1;
+        }
+    }
+    .scroll-reveal-container {
+        width: 100%;
+        overflow: hidden;
+        padding: 20px 0;
+        background: transparent;
+        margin-bottom: 15px;
+    }
+    .scroll-reveal-box {
+        display: inline-block;
+        background-color: #1A1A1A;
+        color: #FFFFFF;
+        padding: 12px 28px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 3rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        box-shadow: 4px 4px 0px #E6B8C7;
+        letter-spacing: 2px;
+        animation: slideInFromLeft 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -135,36 +168,12 @@ client = genai.Client(
     vertexai=False
 )
 
-# HIỆU ỨNG CHỮ CHẠY QUA CHẠY LẠI (MARQUEE)
+# BANNER POPCORN BRAIN HIỆU ỨNG NỀN ĐEN NGHIÊNG
 st.markdown("""
-    <style>
-    .marquee-container {
-        width: 100%;
-        overflow: hidden;
-        white-space: nowrap;
-        box-sizing: border-box;
-        background: transparent;
-        padding: 10px 0;
-        margin-bottom: 15px;
-    }
-    .marquee-text {
-        display: inline-block;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: 3.5rem;
-        font-weight: 900;
-        color: #1B365D;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        animation: marquee 12s linear infinite alternate;
-    }
-    @keyframes marquee {
-        0% { transform: translateX(0%); }
-        100% { transform: translateX(40%); }
-    }
-    </style>
-
-    <div class="marquee-container">
-        <div class="marquee-text">POPCORN BRAIN 🍿🔥✨</div>
+    <div class="scroll-reveal-container">
+        <div class="scroll-reveal-box">
+            POPCORN BRAIN 🍿🔥✨
+        </div>
     </div>
 """, unsafe_allow_html=True)
 
@@ -223,12 +232,12 @@ with tab2:
     </div>
     """, unsafe_allow_html=True)
 
-    # Khung đếm thời gian
+    # Khung đếm thời gian thủ công
     with st.expander("⏱️ BỘ ĐẾM THỜI GIAN THỬ THÁCH (DIGITAL DETOX TIMER)"):
         st.write("Chọn thời gian bạn muốn thử thách cất điện thoại hoặc tập trung chữa lành:")
         col_t1, col_t2 = st.columns([2, 1])
         with col_t1:
-            timer_minutes = st.selectbox("Chọn số phút:", [5, 10, 15, 20, 30], index=2)
+            timer_minutes = st.selectbox("Chọn số phút:", [3, 5, 10, 15, 20, 30], index=0)
         with col_t2:
             st.write("")
             st.write("")
@@ -269,10 +278,10 @@ with tab2:
                         Bạn là một trợ lý AI Gen Z chuyên gia chữa lành hội chứng "Popcorn Brain" (não bỏng ngô) cực kỳ thân thiện, lầy lội và tràn đầy năng lượng tích cực! 🔥✨
                         
                         QUY TẮC BẮT BUỘC:
-                        1. KHI NGƯỜI DÙNG KHOE HOẶC HỎI VỀ VIỆC LƯỚT TIKTOK / MẠNG XÃ HỘI (Ví dụ: "giờ hay cho học lướt tiktok nha", "đang lướt tóp tóp sướng quá"): Bạn PHẢI MẮNG MỎ, CẢNH TỈNH VÀ NGĂN CẢN NGAY LẬP TỨC bằng văn phong Gen Z cực lầy lội! Tuyệt đối KHÔNG được vội vàng đưa ra Bước 1 cai nghiện hay hướng dẫn giải pháp gì cả. Hãy bắt họ dừng lại ngay (Ví dụ: "Úi dời ơi ní ơi 😱! Lại lướt TikTok nữa hả? Bộ tính để cái bộ não bỏng ngô nó nổ lách tách luôn hay gì mà cứ cắm mặt vào đấy thế hả giời? 🍿🛑 Dừng ngay, gấp đôi canxi vào đầu liền cho tui! Đang ngập chìm trong hố đen dopamine rồi đấy biết chưa hả mấy ní! 📱💥").
-                        2. KHI NGƯỜI DÙNG HỎI NGOÀI LỀ (giải toán, code, nấu ăn...): Từ chối lầy lội và giới thiệu sang bạn AI khác (ChatGPT, Gemini...).
-                        3. KHI NGƯỜI DÙNG CHỦ ĐỘNG HỎI CÁCH CHỮA/KHẮC PHỤC: Lúc này mới được đưa ra đúng MỘT bước đầu tiên, yêu cầu bấm giờ và chờ họ xác nhận.
-                        4. PHẢI BẮN EMOJI NHIỆT TÌNH 🤪🍿📱⚡: Dùng từ lóng Gen Z ('keo lỳ', 'ét o ét', 'cháy quá', 'mấy ní'...) kết hợp thật nhiều emoji sinh động!
+                        1. KHI NGƯỜI DÙNG KHOE HOẶC HỎI VỀ VIỆC LƯỚT TIKTOK / MẠNG XÃ HỘI: Bạn PHẢI MẮNG MỎ, CẢNH TỈNH VÀ NGĂN CẢN NGAY LẬP TỨC bằng văn phong Gen Z cực lầy lội! Không đưa ra giải pháp vội.
+                        2. KHI NGƯỜI DÙNG HỎI NGOÀI LỀ (giải toán, code, nấu ăn...): Từ chối lầy lội và giới thiệu sang bạn AI khác.
+                        3. KHI NGƯỜI DÙNG CHỦ ĐỘNG HỎI CÁCH CHỮA/KHẮC PHỤC HOẶC ĐỒNG Ý LÀM THEO HƯỚNG DẪN: Đưa ra bước đầu tiên yêu cầu họ rời mắt khỏi màn hình/đứng dậy thư giãn, VÀ BẠN PHẢI ĐÍNH KÈM THẺ KÍCH HOẠT ĐỒNG HỒ Ở CUỐI CÂU TRẢ LỜI theo định dạng chính xác này: [START_TIMER:3] (với số 3 là số phút bấm giờ tương ứng).
+                        4. PHẢI BẮN EMOJI NHIỆT TÌNH 🤪🍿📱⚡: Dùng từ lóng Gen Z ('keo lỳ', 'ét o ét', 'cháy quá', 'mấy ní'...)!
                         """
                         
                         chat_history = []
@@ -280,8 +289,7 @@ with tab2:
                             role = "model" if msg["role"] == "assistant" else "user"
                             chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
 
-                        # Đã sửa thành gemini-3.5-flash-lite để duy trì ngữ cảnh chat
-                        chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
+                        chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
                         response = chat.send_message(prompt, config={'system_instruction': system_instruction})
                         
                         ai_reply = response.text
@@ -299,3 +307,21 @@ with tab2:
                 
                 st.markdown(ai_reply)
                 st.session_state.messages.append({"role": "assistant", "content": ai_reply})
+
+                # TỰ ĐỘNG BẬT BỘ ĐẾM NGƯỢC NẾU AI CÓ GỬI KÈM THẺ [START_TIMER:X]
+                if "[START_TIMER:" in ai_reply:
+                    try:
+                        match = re.search(r'\[START_TIMER:(\d+)\]', ai_reply)
+                        if match:
+                            minutes = int(match.group(1))
+                            st.markdown(f"### ⏱️ Kích hoạt thử thách {minutes} phút chữa lành:")
+                            timer_placeholder = st.empty()
+                            total_seconds = minutes * 60
+                            while total_seconds > 0:
+                                mins, secs = divmod(total_seconds, 60)
+                                timer_placeholder.markdown(f"### ⏳ Thời gian thử thách còn lại: **{mins:02d}:{secs:02d}** 🔥")
+                                time.sleep(1)
+                                total_seconds -= 1
+                            timer_placeholder.markdown("### 🎉 🥳 Xuất sắc đỉnh chóp! Bạn đã hoàn thành thử thách. Báo cáo ngay cho chuyên gia nào! 💅✨")
+                    except Exception as timer_err:
+                        st.write(f"Lỗi chạy đồng hồ: {timer_err}")
