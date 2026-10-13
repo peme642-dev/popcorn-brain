@@ -169,32 +169,51 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("---")
-# HIỆU ỨNG ẢNH ĐỘNG Ở GÓC TRÁI MÀN HÌNH
+# HIỆU ỨNG CHỮ NGHIÊNG NỀN ĐEN CHUYỂN ĐỘNG GIỐNG MẪU
 st.markdown("""
     <style>
-    @keyframes slideInOut {
-        0% { transform: translateX(-110%); }
-        50% { transform: translateX(0%); }
-        100% { transform: translateX(-110%); }
+    .custom-marquee-wrapper {
+        width: 100%;
+        overflow: hidden;
+        padding: 20px 0;
+        background: transparent;
+        margin-bottom: 15px;
     }
     
-    .floating-corner-img {
-        position: fixed;
-        left: 20px;
-        bottom: 30px;
-        width: 160px;
-        z-index: 9999;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        animation: slideInOut 10s ease-in-out infinite;
-        background: #FBF9F1;
-        padding: 5px;
-        border: 2px solid #E6B8C7;
+    .custom-marquee-track {
+        display: inline-block;
+        white-space: nowrap;
+        animation: slideBackAndForth 8s ease-in-out infinite alternate;
+    }
+
+    .marquee-block-item {
+        display: inline-block;
+        background-color: #1A1A1A; /* Khối nền màu đen */
+        color: #FFFFFF;            /* Chữ màu trắng */
+        padding: 12px 24px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 3rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        transform: skew(-15deg);  /* Làm chữ nghiêng góc cá tính */
+        box-shadow: 4px 4px 0px #E6B8C7;
+        letter-spacing: 2px;
+    }
+
+    @keyframes slideBackAndForth {
+        0% { transform: translateX(0%); }
+        100% { transform: translateX(35%); } /* Điều chỉnh khoảng cách trượt ra vào */
     }
     </style>
 
-    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400" class="floating-corner-img" alt="Popcorn Brain Mascot">
+    <div class="custom-marquee-wrapper">
+        <div class="custom-marquee-track">
+            <div class="marquee-block-item">POPCORN BRAIN 🍿</div>
+        </div>
+    </div>
 """, unsafe_allow_html=True)
+
+st.markdown("---")
 tab1, tab2 = st.tabs(["📌 NỘI DUNG NGHIÊN CỨU", "💬 TƯ VẤN CÙNG CHUYÊN GIA AI"])
 
 with tab1:
