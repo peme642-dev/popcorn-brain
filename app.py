@@ -169,7 +169,52 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("---")
+# HIỆU ỨNG TRƯỢT RA HIỆN ĐẸP MẮT TRÊN STREAMLIT
+st.markdown("""
+    <style>
+    @keyframes slideInFromLeft {
+        0% {
+            transform: skew(-15deg) translateX(-150px);
+            opacity: 0;
+        }
+        100% {
+            transform: skew(-15deg) translateX(0);
+            opacity: 1;
+        }
+    }
 
+    .scroll-reveal-container {
+        width: 100%;
+        overflow: hidden;
+        padding: 30px 0;
+        background: transparent;
+        margin-bottom: 15px;
+    }
+    
+    .scroll-reveal-box {
+        display: inline-block;
+        background-color: #1A1A1A; /* Nền khối màu đen */
+        color: #FFFFFF;            /* Chữ màu trắng */
+        padding: 12px 28px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 3rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        box-shadow: 4px 4px 0px #E6B8C7;
+        letter-spacing: 2px;
+        /* Kích hoạt hiệu ứng trượt mượt mà khi hiển thị */
+        animation: slideInFromLeft 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    </style>
+
+    <div class="scroll-reveal-container">
+        <div class="scroll-reveal-box">
+            POPCORN BRAIN 🍿
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+
+st.markdown("---")
 tab1, tab2 = st.tabs(["📌 NỘI DUNG NGHIÊN CỨU", "💬 TƯ VẤN CÙNG CHUYÊN GIA AI"])
 
 with tab1:
