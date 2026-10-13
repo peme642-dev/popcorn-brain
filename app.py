@@ -169,7 +169,32 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("---")
+# HIỆU ỨNG ẢNH ĐỘNG Ở GÓC TRÁI MÀN HÌNH
+st.markdown("""
+    <style>
+    @keyframes slideInOut {
+        0% { transform: translateX(-110%); }
+        50% { transform: translateX(0%); }
+        100% { transform: translateX(-110%); }
+    }
+    
+    .floating-corner-img {
+        position: fixed;
+        left: 20px;
+        bottom: 30px;
+        width: 160px;
+        z-index: 9999;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        animation: slideInOut 10s ease-in-out infinite;
+        background: #FBF9F1;
+        padding: 5px;
+        border: 2px solid #E6B8C7;
+    }
+    </style>
 
+    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400" class="floating-corner-img" alt="Popcorn Brain Mascot">
+""", unsafe_allow_html=True)
 tab1, tab2 = st.tabs(["📌 NỘI DUNG NGHIÊN CỨU", "💬 TƯ VẤN CÙNG CHUYÊN GIA AI"])
 
 with tab1:
