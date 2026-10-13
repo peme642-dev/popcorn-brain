@@ -135,11 +135,7 @@ client = genai.Client(
     vertexai=False
 )
 
-col_img, col_title = st.columns([1, 3])
- with col_img:
-    st.image("Cân bằng thế giới số và thực tế.png", width=220)
- with col_title:
-    # HIỆU ỨNG CHỮ CHẠY QUA CHẠY LẠI (MARQUEE)
+# HIỆU ỨNG CHỮ CHẠY QUA CHẠY LẠI (MARQUEE)
 st.markdown("""
     <style>
     .marquee-container {
