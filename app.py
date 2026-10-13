@@ -287,7 +287,7 @@ with tab2:
                             role = "model" if msg["role"] == "assistant" else "user"
                             chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
 
-                        chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
+                        chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
                         response = chat.send_message(prompt, config={'system_instruction': system_instruction})
                         
                         ai_reply = response.text
