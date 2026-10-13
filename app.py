@@ -1,7 +1,6 @@
 import streamlit as st
 from google import genai
 import time
-import re
 
 st.set_page_config(
     page_title="Popcorn Brain | Chuyên gia AI tư vấn",
@@ -104,7 +103,6 @@ st.markdown("""
     .stTabs [aria-selected="true"] p {
         color: #000000 !important;
     }
-    /* ĐỔI CHỮ Ô NHẬP TIN NHẮN VÀ CÂU TRẢ LỜI CỦA AI THÀNH MÀU ĐEN */
     .stChatInput textarea {
         color: #000000 !important;
         -webkit-text-fill-color: #000000 !important;
@@ -280,7 +278,7 @@ with tab2:
                         QUY TẮC BẮT BUỘC:
                         1. KHI NGƯỜI DÙNG KHOE HOẶC HỎI VỀ VIỆC LƯỚT TIKTOK / MẠNG XÃ HỘI: Bạn PHẢI MẮNG MỎ, CẢNH TỈNH VÀ NGĂN CẢN NGAY LẬP TỨC bằng văn phong Gen Z cực lầy lội! Không đưa ra giải pháp vội.
                         2. KHI NGƯỜI DÙNG HỎI NGOÀI LỀ (giải toán, code, nấu ăn...): Từ chối lầy lội và giới thiệu sang bạn AI khác.
-                        3. KHI NGƯỜI DÙNG CHỦ ĐỘNG HỎI CÁCH CHỮA/KHẮC PHỤC HOẶC ĐỒNG Ý LÀM THEO HƯỚNG DẪN: Đưa ra bước đầu tiên yêu cầu họ rời mắt khỏi màn hình/đứng dậy thư giãn, VÀ BẠN PHẢI ĐÍNH KÈM THẺ KÍCH HOẠT ĐỒNG HỒ Ở CUỐI CÂU TRẢ LỜI theo định dạng chính xác này: [START_TIMER:3] (với số 3 là số phút bấm giờ tương ứng).
+                        3. KHI NGƯỜI DÙNG CHỦ ĐỘNG HỎI CÁCH CHỮA/KHẮC PHỤC: Đưa ra lời khuyên chân thành, hài hước, yêu cầu họ tự cất điện thoại và sang tab bấm giờ trải nghiệm. Tuyệt đối không chèn thẻ lệnh tự động nào cả.
                         4. PHẢI BẮN EMOJI NHIỆT TÌNH 🤪🍿📱⚡: Dùng từ lóng Gen Z ('keo lỳ', 'ét o ét', 'cháy quá', 'mấy ní'...)!
                         """
                         
@@ -289,7 +287,7 @@ with tab2:
                             role = "model" if msg["role"] == "assistant" else "user"
                             chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
 
-                        chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
+                        chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
                         response = chat.send_message(prompt, config={'system_instruction': system_instruction})
                         
                         ai_reply = response.text
@@ -305,32 +303,5 @@ with tab2:
                             ai_reply = f"Ét o ét 😱, có lỗi xíu xiu rồi ní ơi: {e}"
                             break
                 
-               # 1. Lọc bỏ thẻ [START_TIMER:X] khỏi nội dung hiển thị cho đẹp
-                display_reply = ai_reply
-                timer_minutes = None
-                
-                if "[START_TIMER:" in ai_reply:
-                    match = re.search(r'\[START_TIMER:(\d+)\]', ai_reply)
-                    if match:
-                        timer_minutes = int(match.group(1))
-                        # Xóa bỏ thẻ này đi để user không thấy
-                        display_reply = ai_reply.replace(match.group(0), "").strip()
-
-                # 2. Hiển thị nội dung tin nhắn sạch sẽ của AI
-                st.markdown(display_reply)
-                st.session_state.messages.append({"role": "assistant", "content": display_reply})
-
-                # 3. Nếu có lệnh hẹn giờ, hiển thị nút bấm ngay dưới tin nhắn
-                if timer_minutes:
-                    st.markdown(f"### ⏱️ Thử thách chữa lành: {timer_minutes} phút rời xa màn hình")
-                    btn_key = f"btn_timer_{len(st.session_state.messages)}"
-                    
-                    if st.button(f"🚀 Bấm vào đây để bắt đầu đếm ngược {timer_minutes} phút!", key=btn_key):
-                        timer_placeholder = st.empty()
-                        total_seconds = timer_minutes * 60
-                        while total_seconds > 0:
-                            mins, secs = divmod(total_seconds, 60)
-                            timer_placeholder.markdown(f"### ⏳ Thời gian thử thách còn lại: **{mins:02d}:{secs:02d}** 🔥")
-                            time.sleep(1)
-                            total_seconds -= 1
-                        timer_placeholder.markdown("### 🎉 🥳 Xuất sắc đỉnh chóp! Bạn đã hoàn thành thử thách. Báo cáo ngay cho chuyên gia nào! 💅✨")
+                st.markdown(ai_reply)
+                st.session_state.messages.append({"role": "assistant", "content": ai_reply})
