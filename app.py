@@ -169,48 +169,64 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("---")
-# HIỆU ỨNG CHỮ NGHIÊNG NỀN ĐEN CHUYỂN ĐỘNG GIỐNG MẪU
+# HIỆU ỨNG TRƯỢT RA KHI CUỘN XUỐNG ĐẾN KHU VỰC NÀY
 st.markdown("""
     <style>
-    .custom-marquee-wrapper {
+    .scroll-reveal-container {
         width: 100%;
         overflow: hidden;
-        padding: 20px 0;
+        padding: 30px 0;
         background: transparent;
         margin-bottom: 15px;
     }
     
-    .custom-marquee-track {
+    .scroll-reveal-box {
         display: inline-block;
-        white-space: nowrap;
-        animation: slideBackAndForth 8s ease-in-out infinite alternate;
-    }
-
-    .marquee-block-item {
-        display: inline-block;
-        background-color: #1A1A1A; /* Khối nền màu đen */
+        background-color: #1A1A1A; /* Nền khối màu đen */
         color: #FFFFFF;            /* Chữ màu trắng */
-        padding: 12px 24px;
+        padding: 12px 28px;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 3rem;
         font-weight: 900;
         text-transform: uppercase;
-        transform: skew(-15deg);  /* Làm chữ nghiêng góc cá tính */
+        /* Trạng thái ban đầu: dịch chuyển sang trái và ẩn đi */
+        transform: skew(-15deg) translateX(-120px);
+        opacity: 0;
+        transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
         box-shadow: 4px 4px 0px #E6B8C7;
         letter-spacing: 2px;
     }
 
-    @keyframes slideBackAndForth {
-        0% { transform: translateX(0%); }
-        100% { transform: translateX(35%); } /* Điều chỉnh khoảng cách trượt ra vào */
+    /* Trạng thái khi cuộn tới: trượt về vị trí cũ và hiện rõ */
+    .scroll-reveal-box.active {
+        transform: skew(-15deg) translateX(0);
+        opacity: 1;
     }
     </style>
 
-    <div class="custom-marquee-wrapper">
-        <div class="custom-marquee-track">
-            <div class="marquee-block-item">POPCORN BRAIN 🍿</div>
+    <div class="scroll-reveal-container" id="reveal-section">
+        <div class="scroll-reveal-box" id="reveal-box">
+            POPCORN BRAIN 🍿
         </div>
     </div>
+
+    <script>
+    (function() {
+        const box = document.getElementById('reveal-box');
+        const section = document.getElementById('reveal-section');
+        if (!box || !section) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    box.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        observer.observe(section);
+    })();
+    </script>
 """, unsafe_allow_html=True)
 
 st.markdown("---")
