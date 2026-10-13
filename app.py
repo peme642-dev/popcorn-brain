@@ -169,40 +169,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("---")
-# HIỆU ỨNG CHỮ CHẠY QUA CHẠY LẠI (MARQUEE)
-st.markdown("""
-    <style>
-    .marquee-container {
-        width: 100%;
-        overflow: hidden;
-        white-space: nowrap;
-        box-sizing: border-box;
-        background: transparent;
-        padding: 10px 0;
-        margin-bottom: 15px;
-    }
-    .marquee-text {
-        display: inline-block;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: 3.5rem;
-        font-weight: 900;
-        color: #1B365D;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        animation: marquee 12s linear infinite alternate;
-    }
-    @keyframes marquee {
-        0% { transform: translateX(0%); }
-        100% { transform: translateX(40%); }
-    }
-    </style>
-
-    <div class="marquee-container">
-        <div class="marquee-text">POPCORN BRAIN 🍿🔥✨</div>
-    </div>
-""", unsafe_allow_html=True)
-
-st.markdown("---")
 tab1, tab2 = st.tabs(["📌 NỘI DUNG NGHIÊN CỨU", "💬 TƯ VẤN CÙNG CHUYÊN GIA AI"])
 
 with tab1:
