@@ -151,14 +151,7 @@ with tab1:
     Thuật ngữ <b>"Popcorn Brain"</b> được nhà nghiên cứu David M. Levy (Đại học Washington, Hoa Kỳ) đưa ra lần đầu vào năm 2011, sử dụng để mô tả trạng thái con người trở nên quen thuộc với việc tiếp nhận các kích thích số nhanh, liên tục và đa dạng đến mức khó duy trì sự chú ý đối với những hoạt động có nhịp độ chậm hơn, đòi hỏi sự tập trung và suy nghĩ sâu.
     </div>
     <div class="intro-text">
-    Trong những năm gần đây, cùng với sự phát triển của điện thoại thông minh, mạng xã hội, video ngắn và các nền tảng số, khái niệm "hội chứng não bỏng ngô" ngày càng được nhắc đến trong các nghiên cứu, các phương tiện truyền thông và các cuộc thảo luận về sức khỏe tinh thần trong thời đại số.
-    </div>
-    <div class="intro-text">
     Cần nhấn mạnh rằng, hiện nay "hội chứng não bỏng ngô" chưa được công nhận là một bệnh lý hay một rối loạn tâm thần chính thức trong các hệ thống phân loại bệnh quốc tế. Thuật ngữ này chủ yếu được sử dụng để mô tả một nhóm biểu hiện về nhận thức và hành vi có thể xuất hiện khi con người thường xuyên tiếp xúc với các kích thích số có cường độ cao và thay đổi liên tục.
-    </div>
-    <div class="intro-text">
-    <b>Trong phạm vi đề tài này, "hội chứng não bỏng ngô" được hiểu là:</b><br>
-    <i>Hiện tượng học sinh có xu hướng khó duy trì sự chú ý đối với các hoạt động cần tập trung kéo dài, dễ mất kiên nhẫn, thường xuyên tìm kiếm các kích thích mới, cảm thấy bồn chồn khi thiếu các hoạt động giải trí số và gặp khó khăn trong việc tự điều chỉnh hành vi sử dụng công nghệ.</i>
     </div>
     """, unsafe_allow_html=True)
 
