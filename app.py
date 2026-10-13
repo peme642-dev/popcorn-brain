@@ -309,19 +309,28 @@ with tab2:
                 st.session_state.messages.append({"role": "assistant", "content": ai_reply})
 
                 # TỰ ĐỘNG BẬT BỘ ĐẾM NGƯỢC NẾU AI CÓ GỬI KÈM THẺ [START_TIMER:X]
+                st.markdown(ai_reply)
+                st.session_state.messages.append({"role": "assistant", "content": ai_reply})
+
+                # HIỂN THỊ NÚT BẤM KÍCH HOẠT BỘ ĐẾM NẾU AI CÓ GỬI KÈM THẺ [START_TIMER:X]
                 if "[START_TIMER:" in ai_reply:
                     try:
                         match = re.search(r'\[START_TIMER:(\d+)\]', ai_reply)
                         if match:
                             minutes = int(match.group(1))
-                            st.markdown(f"### ⏱️ Kích hoạt thử thách {minutes} phút chữa lành:")
-                            timer_placeholder = st.empty()
-                            total_seconds = minutes * 60
-                            while total_seconds > 0:
-                                mins, secs = divmod(total_seconds, 60)
-                                timer_placeholder.markdown(f"### ⏳ Thời gian thử thách còn lại: **{mins:02d}:{secs:02d}** 🔥")
-                                time.sleep(1)
-                                total_seconds -= 1
-                            timer_placeholder.markdown("### 🎉 🥳 Xuất sắc đỉnh chóp! Bạn đã hoàn thành thử thách. Báo cáo ngay cho chuyên gia nào! 💅✨")
+                            st.markdown(f"### ⏱️ Thử thách chữa lành: {minutes} phút rời xa màn hình")
+                            
+                            # Tạo một key duy nhất cho nút bấm dựa trên độ dài lịch sử chat để tránh bị trùng
+                            btn_key = f"btn_timer_{len(st.session_state.messages)}"
+                            
+                            if st.button(f"🚀 Bấm vào đây để bắt đầu đếm ngược {minutes} phút!", key=btn_key):
+                                timer_placeholder = st.empty()
+                                total_seconds = minutes * 60
+                                while total_seconds > 0:
+                                    mins, secs = divmod(total_seconds, 60)
+                                    timer_placeholder.markdown(f"### ⏳ Thời gian thử thách còn lại: **{mins:02d}:{secs:02d}** 🔥")
+                                    time.sleep(1)
+                                    total_seconds -= 1
+                                timer_placeholder.markdown("### 🎉 🥳 Xuất sắc đỉnh chóp! Bạn đã hoàn thành thử thách. Báo cáo ngay cho chuyên gia nào! 💅✨")
                     except Exception as timer_err:
                         st.write(f"Lỗi chạy đồng hồ: {timer_err}")
