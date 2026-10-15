@@ -184,7 +184,7 @@ with tab1:
     Thuật ngữ <b>"Popcorn Brain"</b> được nhà nghiên cứu David M. Levy (Đại học Washington, Hoa Kỳ) đưa ra lần đầu vào năm 2011, sử dụng để mô tả trạng thái con người trở nên quen thuộc với việc tiếp nhận các kích thích số nhanh, liên tục và đa dạng đến mức khó duy trì sự chú ý đối với những hoạt động có nhịp độ chậm hơn, đòi hỏi sự tập trung và suy nghĩ sâu.
     </div>
     <div class="intro-text">
-    Cần nhấn mạnh rằng, hiện nay "hội chứng não bỏng ngô" chưa được công nhận là một bệnh lý hay một rối loạn tâm thần chính thức trong các hệ thống phân loại bệnh quốc tế. Thuật ngữ này chủ yếu được sử dụng để mô tả một nhóm biểu hiện về nhận thức và hành vi có thể xuất hiện khi con người thường xuyên tiếp xúc với các kích thích số có cường độ cao và thay đổi liên tục.
+    Cần nhấn mạnh rằng, hiện nay "hội chứng phát triển não bỏng ngô" chưa được công nhận là một bệnh lý hay một rối loạn tâm thần chính thức trong các hệ thống phân loại bệnh quốc tế. Thuật ngữ này chủ yếu được sử dụng để mô tả một nhóm biểu hiện về nhận thức và hành vi có thể xuất hiện khi con người thường xuyên tiếp xúc với các kích thích số có cường độ cao và thay đổi liên tục.
     </div>
     """, unsafe_allow_html=True)
 
@@ -198,7 +198,7 @@ with tab1:
         with st.expander("THÓI QUEN SỬ DỤNG ĐIỆN THOẠI CHO MỤC ĐÍCH GIẢI TRÍ"):
             st.write("Việc sử dụng điện thoại trong thời gian dài, đặc biệt là các hoạt động giải trí có tính kích thích cao, có thể liên quan đến khả năng duy trì sự chú ý và tự điều chỉnh hành vi.")
         with st.expander("KHẢ NĂNG TỰ ĐIỀU CHỈNH HÀNH VI"):
-            st.write("Những học sinh có kỹ năng tự nhận thức, tự giám sát và tự kiểm soát hành vi tốt hơn có thể thích ứng hiệu quả hơn với môi trường số và giảm nguy cơ xuất hiện các biểu hiện của 'hội chứng não bỏng ngô'.")
+            st.write("Những học sinh có kỹ năng tự nhận thức, tự giám sát và tự kiểm soát hành vi tốt hơn có thể thích ứng hiệu quả hơn với môi trường số và giảm nguy cơ xuất hiện các biểu hiện của 'hội chứng phát triển não bỏng ngô'.")
         with st.expander("MỨC ĐỘ THAM GIA CÁC HOẠT ĐỘNG NGOÀI MÔI TRƯỜNG SỐ"):
             st.write("Việc tham gia các hoạt động thể chất, hoạt động trải nghiệm, hoạt động xã hội và các sở thích cá nhân có thể tạo cơ hội để học sinh duy trì sự tập trung, phát triển các mối quan hệ trực tiếp và cân bằng việc sử dụng công nghệ.")
 
@@ -402,6 +402,7 @@ with tab3:
         submitted = st.form_submit_button("🔥 XEM KẾT QUẢ ĐÁNH GIÁ NGAY")
 
         if submitted:
+            # Tính tổng điểm 25 câu hỏi (thang 1 - 5)
             total_score = (
                 scale_map[q1] + scale_map[q2] + scale_map[q3] + scale_map[q4] + scale_map[q5] +
                 scale_map[q6] + scale_map[q7] + scale_map[q8] + scale_map[q9] + scale_map[q10] +
@@ -410,12 +411,20 @@ with tab3:
                 scale_map[q21] + scale_map[q22] + scale_map[q23] + scale_map[q24] + scale_map[q25]
             )
 
-            st.markdown("---")
-            st.markdown(f"### 📊 KẾT QUẢ TỔNG ĐIỂM CỦA BẠN: **{total_score} / 125 ĐIỂM**")
+            # Tính Điểm Trung Bình của 5 tiêu chí theo công thức trong tài liệu
+            avg_score = total_score / 25.0
 
-            if total_score <= 50:
-                st.success("🎉 **Cấp độ: TUYỆT VỜI / HỆ TÂM THỊNH VƯỢC!** Bộ não của bạn vẫn duy trì sự tập trung cực kỳ sâu sắc, keo lỳ và không bị chi phối bởi thế giới số. Hãy cứ phát huy phong độ này nhé!")
-            elif total_score <= 85:
-                st.warning("⚠️ **Cấp độ: BÁO ĐỘNG XANH - NÃO BỎNG NGÔ NHẸ!** Bạn đang bắt đầu có dấu hiệu lơ đễnh và thèm thuồng thông báo điện thoại rồi đấy. Hãy ghé ngay tab Tư vấn chuyên gia để lập mưu cai nghiện gấp nha ní!")
+            st.markdown("---")
+            st.markdown(f"### 📊 ĐIỂM TRUNG BÌNH CỦA BẠN: **{avg_score:.2f} / 5.00**")
+
+            # Quy đổi mức độ biểu hiện chuẩn theo bảng nghiên cứu
+            if 1.00 <= avg_score <= 1.80:
+                st.success("🎉 **Mức độ biểu hiện: RẤT THẤP (1,00 – 1,80)**\n\nBộ não của bạn giữ sự tập trung cực kỳ vững vàng, hoàn toàn làm chủ thiết bị số và hầu như không có biểu hiện của 'Popcorn Brain'! ✨")
+            elif 1.81 <= avg_score <= 2.60:
+                st.info("☘️ **Mức độ biểu hiện: THẤP (1,81 – 2,60)**\n\nBạn kiểm soát hành vi số khá tốt, thỉnh thoảng chỉ xao nhãng đôi chút. Hãy tiếp tục duy trì thói quen lành mạnh này nhé!")
+            elif 2.61 <= avg_score <= 3.40:
+                st.warning("⚠️ **Mức độ biểu hiện: TRUNG BÌNH (2,61 – 3,40)**\n\nBạn đã bắt đầu xuất hiện các biểu hiện của 'Popcorn Brain' (dễ mất tập trung, thèm lướt thông báo). Hãy ghé ngay tab Tư vấn chuyên gia để lên kế hoạch Detox nào!")
+            elif 3.41 <= avg_score <= 4.20:
+                st.error("🚨 **Mức độ biểu hiện: CAO (3,41 – 4,20)**\n\nBiểu hiện 'não bỏng ngô' của bạn ở mức cao! Bạn bị phân tâm nhiều, khó duy trì sự kiên nhẫn và bồn chồn khi thiếu điện thoại. Cần giảm thời gian sử dụng ngay!")
             else:
-                st.error("🚨 **Cấp độ: ÉT O ÉT - BỎNG NGÔ TOÀN TẬP!** Bộ nội dung của bạn đã bị hố đen dopamine và mạng xã hội nuốt chửng rồi! Mất tập trung nặng, bồn chồn không yên. Đứng dậy gấp, cất điện thoại và quay lại thực tại ngay lập tức!")
+                st.error("💥 **Mức độ biểu hiện: RẤT CAO (4,21 – 5,00)**\n\nBÁO ĐỘNG ĐỎ! Mức độ biểu hiện 'Popcorn Brain' cực kỳ rõ rệt! Bộ nội dung của bạn đang quá quen với các kích thích nhanh. Hãy tắt máy và thực hiện bài tập tập trung ngay lập tức!")
