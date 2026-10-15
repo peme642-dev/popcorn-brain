@@ -176,7 +176,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("---")
-tab1, tab2 = st.tabs(["📌 NỘI DUNG NGHIÊN CỨU", "💬 TƯ VẤN CÙNG CHUYÊN GIA AI"])
+tab1, tab2, tab3 = st.tabs(["📌 NỘI DUNG NGHIÊN CỨU", "💬 TƯ VẤN CÙNG CHUYÊN GIA AI", "📋 BÀI TEST ĐÁNH GIÁ"])
 
 with tab1:
     st.markdown("""
@@ -254,7 +254,6 @@ with tab2:
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Hiển thị lại lịch sử tin nhắn
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             if "audio" in message:
@@ -262,7 +261,7 @@ with tab2:
             else:
                 st.markdown(message["content"])
 
-    # Khung chat tích hợp sẵn nút ghi âm micro bên trong (accept_audio=True)
+    # Khung chat tích hợp ghi âm micro (accept_audio=True)
     prompt = st.chat_input(
         'Hé lô! Cần chuyên gia Gen Z tư vấn gì về "não bỏng ngô" không? 🍿🔥',
         accept_audio=True
@@ -329,11 +328,4 @@ with tab2:
                             time.sleep(2)
                             continue
                         elif "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                            ai_reply = "Ét o ét 😭! API Key đã chạm giới hạn miễn phí rồi. Hãy tạo API key mới tại Google AI Studio nhé ⚡!"
-                            break
-                        else:
-                            ai_reply = f"Ét o ét 😱, có lỗi xíu xiu rồi ní ơi: {e}"
-                            break
-                
-                st.markdown(ai_reply)
-                st.session_state.messages.append({"role": "assistant", "content": ai_reply})
+                            ai_reply = "Ét o ét 😭! API Key đã chạm giới hạn miễn phí rồi. Hãy tạo API key mới tại
