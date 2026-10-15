@@ -262,33 +262,24 @@ with tab2:
             else:
                 st.markdown(message["content"])
 
-    # THÊM KHUNG THU ÂM VÀ NHẬP TEXT
-    col_input1, col_input2 = st.columns([4, 1])
-    
-    with col_input2:
-        audio_file = st.audio_input("🎙️ Nói với AI")
-
-    prompt = st.chat_input('Hé lô! Cần chuyên gia Gen Z tư vấn gì về "não bỏng ngô" không? 🍿🔥')
-
-    user_input = None
-    is_audio = False
+    # Khung chat tích hợp sẵn nút ghi âm micro bên trong (accept_audio=True)
+    prompt = st.chat_input(
+        'Hé lô! Cần chuyên gia Gen Z tư vấn gì về "não bỏng ngô" không? 🍿🔥',
+        accept_audio=True
+    )
 
     if prompt:
-        user_input = prompt
-        is_audio = False
-    elif audio_file:
-        user_input = audio_file
-        is_audio = True
+        user_text = prompt.text if hasattr(prompt, "text") else str(prompt)
+        audio_data = prompt.audio if hasattr(prompt, "audio") else None
 
-    if user_input:
-        if not is_audio:
-            st.session_state.messages.append({"role": "user", "content": user_input})
+        if user_text:
+            st.session_state.messages.append({"role": "user", "content": user_text})
             with st.chat_message("user"):
-                st.markdown(user_input)
-        else:
-            st.session_state.messages.append({"role": "user", "content": "🎙️ [Tin nhắn bằng giọng nói]", "audio": audio_file})
+                st.markdown(user_text)
+        elif audio_data:
+            st.session_state.messages.append({"role": "user", "content": "🎙️ [Tin nhắn bằng giọng nói]", "audio": audio_data})
             with st.chat_message("user"):
-                st.audio(audio_file)
+                st.audio(audio_data)
 
         with st.chat_message("assistant"):
             if not client:
@@ -315,13 +306,13 @@ with tab2:
                                 role = "model" if msg["role"] == "assistant" else "user"
                                 chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
 
-                        if not is_audio:
-                            chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
-                            response = chat.send_message(user_input, config={'system_instruction': system_instruction})
+                        if not audio_data:
+                            chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
+                            response = chat.send_message(user_text, config={'system_instruction': system_instruction})
                         else:
-                            audio_bytes = audio_file.getvalue()
+                            audio_bytes = audio_data.getvalue()
                             response = client.models.generate_content(
-                                model='gemini-3.5-flash-lite',
+                                model='gemini-2.5-flash',
                                 contents=[
                                     {"role": "user", "parts": [
                                         {"inline_data": {"mime_type": "audio/wav", "data": audio_bytes}},
