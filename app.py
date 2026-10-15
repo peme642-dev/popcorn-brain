@@ -312,7 +312,7 @@ with tab2:
                         else:
                             audio_bytes = audio_data.getvalue()
                             response = client.models.generate_content(
-                                model='gemini-2.5-flash',
+                                model='gemini-3.5-flash-lite',
                                 contents=[
                                     {"role": "user", "parts": [
                                         {"inline_data": {"mime_type": "audio/wav", "data": audio_bytes}},
