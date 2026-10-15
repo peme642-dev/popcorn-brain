@@ -170,7 +170,7 @@ client = genai.Client(
 st.markdown("""
     <div class="scroll-reveal-container">
         <div class="scroll-reveal-box">
-            POPCORN BRAIN 🍿🔥✨
+            POPCORN BRAIN
         </div>
     </div>
 """, unsafe_allow_html=True)
@@ -249,7 +249,7 @@ with tab2:
                 timer_placeholder.markdown(f"### ⏳ Thời gian thử thách còn lại: **{mins:02d}:{secs:02d}** 🔥")
                 time.sleep(1)
                 total_seconds -= 1
-            timer_placeholder.markdown("### 🎉 🥳 Xuất sắc đỉnh chóp! Bạn đã hoàn thành thử thách. Quay lại chat với AI ngay nào! 💅✨")
+            timer_placeholder.markdown("### 🎉 Xuất sắc đỉnh chóp! Bạn đã hoàn thành thử thách. Quay lại chat với AI ngay nào!")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -282,7 +282,7 @@ with tab2:
 
         with st.chat_message("assistant"):
             if not client:
-                ai_reply = "⚠️ U là trời 🤦‍♂️! Bạn chưa điền API Key kìa. Hãy cấu hình `GEMINI_API_KEY` trong Streamlit Secrets nha ✨!"
+                ai_reply = "⚠️ U là trời! Bạn chưa điền API Key kìa. Hãy cấu hình GEMINI_API_KEY trong Streamlit Secrets nha!"
                 st.markdown(ai_reply)
                 st.session_state.messages.append({"role": "assistant", "content": ai_reply})
             else:
@@ -290,13 +290,13 @@ with tab2:
                 for attempt in range(3):
                     try:
                         system_instruction = """
-                        Bạn là một trợ lý AI Gen Z chuyên gia chữa lành hội chứng "Popcorn Brain" (não bỏng ngô) cực kỳ thân thiện, lầy lội và tràn đầy năng lượng tích cực! 🔥✨
+                        Bạn là một trợ lý AI Gen Z chuyên gia chữa lành hội chứng Popcorn Brain (não bỏng ngô) cực kỳ thân thiện, lầy lội và tràn đầy năng lượng tích cực!
                         
                         QUY TẮC BẮT BUỘC:
                         1. KHI NGƯỜI DÙNG KHOE HOẶC HỎI VỀ VIỆC LƯỚT TIKTOK / MẠNG XÃ HỘI: Bạn PHẢI MẮNG MỎ, CẢNH TỈNH VÀ NGĂN CẢN NGAY LẬP TỨC bằng văn phong Gen Z cực lầy lội! Không đưa ra giải pháp vội.
                         2. KHI NGƯỜI DÙNG HỎI NGOÀI LỀ (giải toán, code, nấu ăn...): Từ chối lầy lội và giới thiệu sang bạn AI khác.
                         3. KHI NGƯỜI DÙNG CHỦ ĐỘNG HỎI CÁCH CHỮA/KHẮC PHỤC: Đưa ra lời khuyên chân thành, hài hước, yêu cầu họ tự cất điện thoại và sang tab bấm giờ trải nghiệm.
-                        4. PHẢI BẮN EMOJI NHIỆT TÌNH 🤪🍿📱⚡: Dùng từ lóng Gen Z ('keo lỳ', 'ét o ét', 'cháy quá', 'mấy ní'...)!
+                        4. PHẢI BẮN EMOJI NHIỆT TÌNH: Dùng từ lóng Gen Z ('keo lỳ', 'ét o ét', 'cháy quá', 'mấy ní'...)!
                         """
                         
                         chat_history = []
@@ -328,4 +328,94 @@ with tab2:
                             time.sleep(2)
                             continue
                         elif "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                            ai_reply = "Ét o ét 😭! API Key đã chạm giới hạn miễn phí rồi. Hãy tạo API key mới tại
+                            ai_reply = "Ét o ét! API Key đã chạm giới hạn miễn phí rồi. Hãy tạo API key mới tại Google AI Studio nhé!"
+                            break
+                        else:
+                            ai_reply = f"Ét o ét, có lỗi xíu xiu rồi ní ơi: {e}"
+                            break
+                
+                st.markdown(ai_reply)
+                st.session_state.messages.append({"role": "assistant", "content": ai_reply})
+
+with tab3:
+    st.markdown("<h2>📋 KHẢO SÁT BIỂU HIỆN HỘI CHỨNG 'NÃO BỎNG NGÔ'</h2>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="intro-text">
+    Hãy đọc kỹ các câu hỏi dưới đây mô tả thói quen và cảm nhận của bạn trong thời gian gần đây, sau đó chọn mức độ phù hợp nhất.<br>
+    <b>Thang đo:</b> A: Hoàn toàn không đúng | B: Chỉ có vài ý đúng | C: Trung bình | D: Đúng khá nhiều | E: Hoàn toàn đúng
+    </div>
+    """, unsafe_allow_html=True)
+
+    scale_map = {"A (1đ)": 1, "B (2đ)": 2, "C (3đ)": 3, "D (4đ)": 4, "E (5đ)": 5}
+    options_list = ["A (1đ)", "B (2đ)", "C (3đ)", "D (4đ)", "E (5đ)"]
+
+    with st.form("survey_form"):
+        st.markdown("### 1. Khả năng duy trì sự tập trung")
+        q1 = st.radio("1. Tôi không thể tập trung vào một nhiệm vụ học tập trong thời gian dài và thường xuyên bị phân tâm", options_list, horizontal=True)
+        q2 = st.radio("2. Khi đang học, em thường bị điện thoại hoặc các thông báo trên thiết bị số làm mất tập trung", options_list, horizontal=True)
+        q3 = st.radio("3. Khi đang lướt mạng xã hội, gặp một video dài, tôi thường không xem và lướt qua ngay vì cảm thấy nhàm chán", options_list, horizontal=True)
+        q4 = st.radio("4. Khi làm một nhiệm vụ mà bị phân tâm, tôi cần được nhắc nhở mới quay lại việc đang làm được", options_list, horizontal=True)
+        q5 = st.radio("5. Khi học bài được một thời gian, tự thưởng cho mình 10 phút chơi điện thoại. Tôi thường chơi đến hơn 30 phút", options_list, horizontal=True)
+
+        st.markdown("### 2. Xu hướng tìm kiếm kích thích mới")
+        q6 = st.radio("6. Khi đang sử dụng điện thoại, tôi thường xuyên chuyển từ ứng dụng hoặc nội dung này sang ứng dụng hoặc nội dung khác", options_list, horizontal=True)
+        q7 = st.radio("7. Tôi thường kiểm tra điện thoại để xem có nội dung hoặc thông báo mới hay không", options_list, horizontal=True)
+        q8 = st.radio("8. Khi một nội dung không còn hấp dẫn, tôi thường nhanh chóng tìm nội dung khác thay thế", options_list, horizontal=True)
+        q9 = st.radio("9. Tôi thường có nhu cầu tiếp nhận nhiều nội dung mới (5-6 nội dung) trong một khoảng thời gian ngắn (10-30 phút)", options_list, horizontal=True)
+        q10 = st.radio("10. Khi học tập, tôi dễ bị thu hút bởi các nội dung mới xuất hiện trên thiết bị số", options_list, horizontal=True)
+
+        st.markdown("### 3. Tính kiên nhẫn của bản thân")
+        q11 = st.radio("11. Tôi không thể kiên trì thực hiện một nhiệm vụ cho đến khi hoàn thành vì cảm thấy mất thời gian", options_list, horizontal=True)
+        q12 = st.radio("12. Tôi thường muốn có kết quả ngay thay vì chờ đợi hoặc thực hiện từng bước", options_list, horizontal=True)
+        q13 = st.radio("13. Tôi dễ cảm thấy chán khi phải thực hiện một nhiệm vụ kéo dài", options_list, horizontal=True)
+        q14 = st.radio("14. Khi gặp khó khăn trong một nhiệm vụ, tôi dễ muốn bỏ cuộc hoặc chuyển sang việc khác", options_list, horizontal=True)
+        q15 = st.radio("15. Tôi có khá nhiều nhiệm vụ chưa hoàn thành được trước đây", options_list, horizontal=True)
+
+        st.markdown("### 4. Cảm giác bồn chồn khi thiếu kích thích số")
+        q16 = st.radio("16. Tôi cảm thấy khó chịu khi phải ở một khoảng thời gian (5-6 tiếng) mà không sử dụng điện thoại", options_list, horizontal=True)
+        q17 = st.radio("17. Khi không có hoạt động giải trí trên điện thoại hoặc Internet, tôi dễ cảm thấy trống trải hoặc buồn chán", options_list, horizontal=True)
+        q18 = st.radio("18. Khi phải chờ đợi hoặc không có việc gì làm, tôi thường muốn lấy điện thoại ra sử dụng", options_list, horizontal=True)
+        q19 = st.radio("19. Tôi cảm thấy bồn chồn hoặc khó tập trung khi không thể sử dụng thiết bị số", options_list, horizontal=True)
+        q20 = st.radio("20. Tôi cảm thấy khó ngồi yên trong thời gian không có điện thoại hoặc các thiết bị điện tử", options_list, horizontal=True)
+
+        st.markdown("### 5. Khả năng tự điều chỉnh hành vi số")
+        q21 = st.radio("21. Tôi khó để có thể chủ động kiểm soát thời gian sử dụng điện thoại của mình", options_list, horizontal=True)
+        q22 = st.radio("22. Tôi thường sử dụng điện thoại lâu hơn thời gian đã dự định", options_list, horizontal=True)
+        q23 = st.radio("23. Tôi không thể thực hiện được mục tiêu hạn chế thời gian sử dụng điện thoại mà mình đã đặt ra", options_list, horizontal=True)
+        q24 = st.radio("24. Dù biết mình nên giảm thời gian sử dụng điện thoại, tôi vẫn khó thực hiện được điều đó", options_list, horizontal=True)
+        q25 = st.radio("25. Tôi thường quay trở lại thói quen sử dụng điện thoại như trước dù đã cố gắng thay đổi", options_list, horizontal=True)
+
+        st.markdown("### 6. Thói quen sử dụng bổ sung")
+        ans_q26 = st.selectbox("26. Trung bình mỗi ngày bạn sử dụng điện thoại khoảng:", [
+            "A. Dưới 2 tiếng", "B. Từ 2 tiếng đến 4 tiếng", "C. Từ 4 tiếng đến 6 tiếng", "D. Từ 6 tiếng đến 8 tiếng", "E. Trên 8 tiếng"
+        ])
+        ans_q27 = st.selectbox("27. Khi học tập, bạn thường để điện thoại:", [
+            "A. Không mang theo hoặc để ở xa", "B. Để gần nhưng không sử dụng", "C. Để gần và thỉnh thoảng kiểm tra", "D. Thường xuyên kiểm tra", "E. Hầu như luôn sử dụng điện thoại"
+        ])
+        ans_q28 = st.selectbox("28. Hoạt động bạn thường sử dụng điện thoại nhiều nhất:", [
+            "A. Học tập", "B. Gọi điện, nhắn tin", "C. Lướt mạng xã hội", "D. Xem phim", "E. Chơi game", "F. Mục khác"
+        ])
+        ans_q29 = st.selectbox("29. Bạn đã từng cố gắng giảm thời gian sử dụng điện thoại chưa?", [
+            "A. Đã từng và kéo dài đến hiện tại", "B. Đã từng nhưng mới ngừng gần đây", "C. Đã từng nhưng chưa duy trì được lâu", "D. Đã từng nhưng không duy trì được", "E. Chưa từng"
+        ])
+
+        submitted = st.form_submit_button("🔥 XEM KẾT QUẢ ĐÁNH GIÁ NGAY")
+
+        if submitted:
+            total_score = (
+                scale_map[q1] + scale_map[q2] + scale_map[q3] + scale_map[q4] + scale_map[q5] +
+                scale_map[q6] + scale_map[q7] + scale_map[q8] + scale_map[q9] + scale_map[q10] +
+                scale_map[q11] + scale_map[q12] + scale_map[q13] + scale_map[q14] + scale_map[q15] +
+                scale_map[q16] + scale_map[q17] + scale_map[q18] + scale_map[q19] + scale_map[q20] +
+                scale_map[q21] + scale_map[q22] + scale_map[q23] + scale_map[q24] + scale_map[q25]
+            )
+
+            st.markdown("---")
+            st.markdown(f"### 📊 KẾT QUẢ TỔNG ĐIỂM CỦA BẠN: **{total_score} / 125 ĐIỂM**")
+
+            if total_score <= 50:
+                st.success("🎉 **Cấp độ: TUYỆT VỜI / HỆ TÂM THỊNH VƯỢC!** Bộ não của bạn vẫn duy trì sự tập trung cực kỳ sâu sắc, keo lỳ và không bị chi phối bởi thế giới số. Hãy cứ phát huy phong độ này nhé!")
+            elif total_score <= 85:
+                st.warning("⚠️ **Cấp độ: BÁO ĐỘNG XANH - NÃO BỎNG NGÔ NHẸ!** Bạn đang bắt đầu có dấu hiệu lơ đễnh và thèm thuồng thông báo điện thoại rồi đấy. Hãy ghé ngay tab Tư vấn chuyên gia để lập mưu cai nghiện gấp nha ní!")
+            else:
+                st.error("🚨 **Cấp độ: ÉT O ÉT - BỎNG NGÔ TOÀN TẬP!** Bộ nội dung của bạn đã bị hố đen dopamine và mạng xã hội nuốt chửng rồi! Mất tập trung nặng, bồn chồn không yên. Đứng dậy gấp, cất điện thoại và quay lại thực tại ngay lập tức!")
