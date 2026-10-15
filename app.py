@@ -254,14 +254,41 @@ with tab2:
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
+    # Hiển thị lại lịch sử tin nhắn
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+            if "audio" in message:
+                st.audio(message["audio"])
+            else:
+                st.markdown(message["content"])
 
-    if prompt := st.chat_input('Hé lô! Cần chuyên gia Gen Z tư vấn gì về "não bỏng ngô" không? 🍿🔥'):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+    # THÊM KHUNG THU ÂM VÀ NHẬP TEXT
+    col_input1, col_input2 = st.columns([4, 1])
+    
+    with col_input2:
+        audio_file = st.audio_input("🎙️ Nói với AI")
+
+    prompt = st.chat_input('Hé lô! Cần chuyên gia Gen Z tư vấn gì về "não bỏng ngô" không? 🍿🔥')
+
+    user_input = None
+    is_audio = False
+
+    if prompt:
+        user_input = prompt
+        is_audio = False
+    elif audio_file:
+        user_input = audio_file
+        is_audio = True
+
+    if user_input:
+        if not is_audio:
+            st.session_state.messages.append({"role": "user", "content": user_input})
+            with st.chat_message("user"):
+                st.markdown(user_input)
+        else:
+            st.session_state.messages.append({"role": "user", "content": "🎙️ [Tin nhắn bằng giọng nói]", "audio": audio_file})
+            with st.chat_message("user"):
+                st.audio(audio_file)
 
         with st.chat_message("assistant"):
             if not client:
@@ -278,17 +305,31 @@ with tab2:
                         QUY TẮC BẮT BUỘC:
                         1. KHI NGƯỜI DÙNG KHOE HOẶC HỎI VỀ VIỆC LƯỚT TIKTOK / MẠNG XÃ HỘI: Bạn PHẢI MẮNG MỎ, CẢNH TỈNH VÀ NGĂN CẢN NGAY LẬP TỨC bằng văn phong Gen Z cực lầy lội! Không đưa ra giải pháp vội.
                         2. KHI NGƯỜI DÙNG HỎI NGOÀI LỀ (giải toán, code, nấu ăn...): Từ chối lầy lội và giới thiệu sang bạn AI khác.
-                        3. KHI NGƯỜI DÙNG CHỦ ĐỘNG HỎI CÁCH CHỮA/KHẮC PHỤC: Đưa ra lời khuyên chân thành, hài hước, yêu cầu họ tự cất điện thoại và sang tab bấm giờ trải nghiệm. Tuyệt đối không chèn thẻ lệnh tự động nào cả.
+                        3. KHI NGƯỜI DÙNG CHỦ ĐỘNG HỎI CÁCH CHỮA/KHẮC PHỤC: Đưa ra lời khuyên chân thành, hài hước, yêu cầu họ tự cất điện thoại và sang tab bấm giờ trải nghiệm.
                         4. PHẢI BẮN EMOJI NHIỆT TÌNH 🤪🍿📱⚡: Dùng từ lóng Gen Z ('keo lỳ', 'ét o ét', 'cháy quá', 'mấy ní'...)!
                         """
                         
                         chat_history = []
                         for msg in st.session_state.messages[:-1]:
-                            role = "model" if msg["role"] == "assistant" else "user"
-                            chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
+                            if "audio" not in msg:
+                                role = "model" if msg["role"] == "assistant" else "user"
+                                chat_history.append({"role": role, "parts": [{"text": msg["content"]}]})
 
-                        chat = client.chats.create(model='gemini-3.5-flash-lite', history=chat_history)
-                        response = chat.send_message(prompt, config={'system_instruction': system_instruction})
+                        if not is_audio:
+                            chat = client.chats.create(model='gemini-2.5-flash', history=chat_history)
+                            response = chat.send_message(user_input, config={'system_instruction': system_instruction})
+                        else:
+                            audio_bytes = audio_file.getvalue()
+                            response = client.models.generate_content(
+                                model='gemini-3.5-flash-lite',
+                                contents=[
+                                    {"role": "user", "parts": [
+                                        {"inline_data": {"mime_type": "audio/wav", "data": audio_bytes}},
+                                        {"text": "Nghe kĩ đoạn giọng nói này và tư vấn/trả lời lại tôi bằng văn phong chuyên gia Gen Z lầy lội nhé!"}
+                                    ]}
+                                ],
+                                config={'system_instruction': system_instruction}
+                            )
                         
                         ai_reply = response.text
                         break
