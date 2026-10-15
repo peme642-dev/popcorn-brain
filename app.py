@@ -411,20 +411,50 @@ with tab3:
                 scale_map[q21] + scale_map[q22] + scale_map[q23] + scale_map[q24] + scale_map[q25]
             )
 
-            # Tính Điểm Trung Bình của 5 tiêu chí theo công thức trong tài liệu
+            # Tính Điểm Trung Bình của 5 tiêu chí
             avg_score = total_score / 25.0
 
             st.markdown("---")
             st.markdown(f"### 📊 ĐIỂM TRUNG BÌNH CỦA BẠN: **{avg_score:.2f} / 5.00**")
 
-            # Quy đổi mức độ biểu hiện chuẩn theo bảng nghiên cứu
+            # Quy đổi mức độ biểu hiện kèm nhận xét Gen Z lầy lội & lời khuyên từ Chuyên gia AI
             if 1.00 <= avg_score <= 1.80:
-                st.success("🎉 **Mức độ biểu hiện: RẤT THẤP (1,00 – 1,80)**\n\nBộ não của bạn giữ sự tập trung cực kỳ vững vàng, hoàn toàn làm chủ thiết bị số và hầu như không có biểu hiện của 'Popcorn Brain'! ✨")
+                st.success("""
+                🎉 **Mức độ biểu hiện: RẤT THẤP (1,00 – 1,80)**
+                
+                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** U là trời! Đỉnh chóp quá ní ơi! 💅✨ Bộ não của bạn thuộc hệ "Tâm Thịnh Vượng", không hề bị dao động hay dính chưởng hố đen dopamine của mạng xã hội chút nào luôn! 
+                
+                💡 **LỜI KHUYÊN:** Phong độ keo lỳ này cứ thế mà phát huy nha! Bạn chính là "vô cực tập trung" giữa một thế giới đầy cám dỗ số. Rủ thêm mấy đứa bạn đang bị lướt tóp tóp liên tục sang đây làm bài test để khai sáng cho chúng nó liền đi nào! 🍿💪
+                """)
             elif 1.81 <= avg_score <= 2.60:
-                st.info("☘️ **Mức độ biểu hiện: THẤP (1,81 – 2,60)**\n\nBạn kiểm soát hành vi số khá tốt, thỉnh thoảng chỉ xao nhãng đôi chút. Hãy tiếp tục duy trì thói quen lành mạnh này nhé!")
+                st.info("""
+                ☘️ **Mức độ biểu hiện: THẤP (1,81 – 2,60)**
+                
+                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Tría troi ơi, xịn đét luôn! 👑 Tinh thần tự giác của bạn ngon lành cạ đấy. Bạn kiểm soát thời gian dùng điện thoại cực kỳ chủ động, thỉnh thoảng chỉ tò mò lướt nhẹ tí rồi ngắt ngay!
+                
+                💡 **LỜI KHUYÊN:** Đôi lúc học hành mệt mỏi mà muốn thưởng cho bản thân vài phút giải trí thì nhớ đặt sẵn báo thức nha! Đừng để mấy quả video ngắn "thao túng tâm lý" lén lút kéo bạn vào cơn nghiện lúc nào không hay nghen! 😉⚡
+                """)
             elif 2.61 <= avg_score <= 3.40:
-                st.warning("⚠️ **Mức độ biểu hiện: TRUNG BÌNH (2,61 – 3,40)**\n\nBạn đã bắt đầu xuất hiện các biểu hiện của 'Popcorn Brain' (dễ mất tập trung, thèm lướt thông báo). Hãy ghé ngay tab Tư vấn chuyên gia để lên kế hoạch Detox nào!")
+                st.warning("""
+                ⚠️ **Mức độ biểu hiện: TRUNG BÌNH (2,61 – 3,40)**
+                
+                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Hơi bị báo động nhẹ rồi đấy mấy ní ơi! 🍿📱 Bạn đang bắt đầu có triệu chứng "mất kiên nhẫn" khi gặp video dài và cứ vài phút lại tay máy cầm điện thoại lên lướt rồi đó nha!
+                
+                💡 **LỜI KHUYÊN:** Não đang ngỏ lời đòi hít thêm dopamine rồi! Bật ngay Tab **Tư vấn cùng Chuyên gia AI** sang chém gió với tui, hoặc bật bộ đếm ngược 15 phút detox ngay và luôn để thanh lọc lại bộ não bỏng ngô lách tách này gấp! 🛑🔥
+                """)
             elif 3.41 <= avg_score <= 4.20:
-                st.error("🚨 **Mức độ biểu hiện: CAO (3,41 – 4,20)**\n\nBiểu hiện 'não bỏng ngô' của bạn ở mức cao! Bạn bị phân tâm nhiều, khó duy trì sự kiên nhẫn và bồn chồn khi thiếu điện thoại. Cần giảm thời gian sử dụng ngay!")
+                st.error("""
+                🚨 **Mức độ biểu hiện: CAO (3,41 – 4,20)**
+                
+                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Ét o ét! 😱 Báo động đỏ chói lọi! Bộ não của bạn đang nổ lách tách như ngô rang trên chảo nóng luôn rồi! Dễ mất tập trung, bồn chồn khó chịu mỗi khi thiếu điện thoại đúng không?
+                
+                💡 **LỜI KHUYÊN:** Dừng ngay việc lướt vô định lại! Bớt ngụp lặn trong hố đen video ngắn liền cho tui. Đứng dậy vươn vai, hít thở thật sâu, uống 1 cốc nước mát lạnh và cất điện thoại xa tầm tay ít nhất 30 phút để cứu vớt sự tập trung nha! 🧊💦
+                """)
             else:
-                st.error("💥 **Mức độ biểu hiện: RẤT CAO (4,21 – 5,00)**\n\nBÁO ĐỘNG ĐỎ! Mức độ biểu hiện 'Popcorn Brain' cực kỳ rõ rệt! Bộ nội dung của bạn đang quá quen với các kích thích nhanh. Hãy tắt máy và thực hiện bài tập tập trung ngay lập tức!")
+                st.error("""
+                💥 **Mức độ biểu hiện: RẤT CAO (4,21 – 5,00)**
+                
+                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Úi dời ơi ní ơi! 💣 BỎNG NGÔ TOÀN TẬP RỒI! Bạn đang bị thế giới số và thuật toán mạng xã hội "thao túng toàn bộ hệ thần kinh" luôn rồi đó! Mất tập trung nặng, không thể ngồi yên nếu thiếu màn hình!
+                
+                💡 **LỜI KHUYÊN PHÁT CẤP:** Ngay lập tức TẮT MÀN HÌNH MÁY TÍNH / ĐIỆN THOẠI! Đứng dậy đi dạo, nhìn ra ngoài cửa sổ ngắm cây xanh hoặc đi trò chuyện trực tiếp với ai đó. Bạn cần một chiến dịch "Digital Detox" khẩn cấp ngay hôm nay! 🛑📱💥
+                """)
