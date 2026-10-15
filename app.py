@@ -287,15 +287,22 @@ with tab2:
                 st.session_state.messages.append({"role": "assistant", "content": ai_reply})
             else:
                 ai_reply = None
+                
+                # Lấy kết quả bài test từ session_state (nếu người dùng đã làm)
+                test_score_info = st.session_state.get("latest_test_score", "Chưa làm bài test khảo sát.")
+                
                 for attempt in range(3):
                     try:
-                        system_instruction = """
+                        system_instruction = f"""
                         Bạn là một trợ lý AI Gen Z chuyên gia chữa lành hội chứng Popcorn Brain (não bỏng ngô) cực kỳ thân thiện, lầy lội và tràn đầy năng lượng tích cực!
                         
+                        THÔNG TIN TRẠNG THÁI HIỆN TẠI CỦA NGƯỜI DÙNG:
+                        - Kết quả bài test khảo sát biểu hiện hội chứng "não bỏng ngô" của họ là: {test_score_info}
+                        
                         QUY TẮC BẮT BUỘC:
-                        1. KHI NGƯỜI DÙNG KHOE HOẶC HỎI VỀ VIỆC LƯỚT TIKTOK / MẠNG XÃ HỘI: Bạn PHẢI MẮNG MỎ, CẢNH TỈNH VÀ NGĂN CẢN NGAY LẬP TỨC bằng văn phong Gen Z cực lầy lội! Không đưa ra giải pháp vội.
-                        2. KHI NGƯỜI DÙNG HỎI NGOÀI LỀ (giải toán, code, nấu ăn...): Từ chối lầy lội và giới thiệu sang bạn AI khác.
-                        3. KHI NGƯỜI DÙNG CHỦ ĐỘNG HỎI CÁCH CHỮA/KHẮC PHỤC: Đưa ra lời khuyên chân thành, hài hước, yêu cầu họ tự cất điện thoại và sang tab bấm giờ trải nghiệm.
+                        1. DỰA VÀO KẾT QUẢ BÀI TEST: Khi người dùng hỏi cách chữa trị, khắc phục hoặc tư vấn, BẮT BUỘC phải nhắc đến điểm số hoặc mức độ biểu hiện từ bài test của họ để đưa ra lời khuyên thực tế, đúng trọng tâm nhất!
+                        2. KHI NGƯỜI DÙNG KHOE HOẶC HỎI VỀ VIỆC LƯỚT TIKTOK / MẠNG XÃ HỘI: Bạn PHẢI MẮNG MỎ, CẢNH TỈNH VÀ NGĂN CẢN NGAY LẬP TỨC bằng văn phong Gen Z cực lầy lội! Không đưa ra giải pháp vội.
+                        3. KHI NGƯỜI DÙNG HỎI NGOÀI LỀ (giải toán, code, nấu ăn...): Từ chối lầy lội và giới thiệu sang bạn AI khác.
                         4. PHẢI BẮN EMOJI NHIỆT TÌNH: Dùng từ lóng Gen Z ('keo lỳ', 'ét o ét', 'cháy quá', 'mấy ní'...)!
                         """
                         
@@ -315,7 +322,7 @@ with tab2:
                                 contents=[
                                     {"role": "user", "parts": [
                                         {"inline_data": {"mime_type": "audio/wav", "data": audio_bytes}},
-                                        {"text": "Nghe kĩ đoạn giọng nói này và tư vấn/trả lời lại tôi bằng văn phong chuyên gia Gen Z lầy lội nhé!"}
+                                        {"text": "Nghe kĩ đoạn giọng nói này và dựa vào kết quả bài test của tôi để tư vấn bằng văn phong Gen Z lầy lội nhé!"}
                                     ]}
                                 ],
                                 config={'system_instruction': system_instruction}
@@ -402,7 +409,6 @@ with tab3:
         submitted = st.form_submit_button("🔥 XEM KẾT QUẢ ĐÁNH GIÁ NGAY")
 
         if submitted:
-            # Tính tổng điểm 25 câu hỏi (thang 1 - 5)
             total_score = (
                 scale_map[q1] + scale_map[q2] + scale_map[q3] + scale_map[q4] + scale_map[q5] +
                 scale_map[q6] + scale_map[q7] + scale_map[q8] + scale_map[q9] + scale_map[q10] +
@@ -411,50 +417,62 @@ with tab3:
                 scale_map[q21] + scale_map[q22] + scale_map[q23] + scale_map[q24] + scale_map[q25]
             )
 
-            # Tính Điểm Trung Bình của 5 tiêu chí
             avg_score = total_score / 25.0
+
+            # Lưu kết quả bài test vào session_state để AI nhận diện
+            if 1.00 <= avg_score <= 1.80:
+                level_desc = f"Điểm trung bình {avg_score:.2f}/5.00 - Mức độ: Rất thấp (Keo lỳ, tâm thịnh vượng, tập trung cực tốt)"
+            elif 1.81 <= avg_score <= 2.60:
+                level_desc = f"Điểm trung bình {avg_score:.2f}/5.00 - Mức độ: Thấp (Kiểm soát tốt, thỉnh thoảng xao nhãng)"
+            elif 2.61 <= avg_score <= 3.40:
+                level_desc = f"Điểm trung bình {avg_score:.2f}/5.00 - Mức độ: Trung bình (Bắt đầu bóp méo chú ý, dễ thèm lướt thông báo)"
+            elif 3.41 <= avg_score <= 4.20:
+                level_desc = f"Điểm trung bình {avg_score:.2f}/5.00 - Mức độ: Cao (Bỏng ngô mức cao, phân tâm nặng, bồn chồn khi thiếu máy)"
+            else:
+                level_desc = f"Điểm trung bình {avg_score:.2f}/5.00 - Mức độ: Rất cao (Bỏng ngô toàn tập, nghiện nặng kích thích số, báo động đỏ)"
+
+            st.session_state["latest_test_score"] = level_desc
 
             st.markdown("---")
             st.markdown(f"### 📊 ĐIỂM TRUNG BÌNH CỦA BẠN: **{avg_score:.2f} / 5.00**")
 
-            # Quy đổi mức độ biểu hiện kèm nhận xét Gen Z lầy lội & lời khuyên từ Chuyên gia AI
             if 1.00 <= avg_score <= 1.80:
                 st.success("""
                 🎉 **Mức độ biểu hiện: RẤT THẤP (1,00 – 1,80)**
                 
                 🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** U là trời! Đỉnh chóp quá ní ơi! 💅✨ Bộ não của bạn thuộc hệ "Tâm Thịnh Vượng", không hề bị dao động hay dính chưởng hố đen dopamine của mạng xã hội chút nào luôn! 
                 
-                💡 **LỜI KHUYÊN:** Phong độ keo lỳ này cứ thế mà phát huy nha! Bạn chính là "vô cực tập trung" giữa một thế giới đầy cám dỗ số. Rủ thêm mấy đứa bạn đang bị lướt tóp tóp liên tục sang đây làm bài test để khai sáng cho chúng nó liền đi nào! 🍿💪
+                💡 **LỜI KHUYÊN:** Phong độ keo lỳ này cứ thế mà phát huy nha! Bạn chính là "vô cực tập trung" giữa một thế giới đầy cám dỗ số.
                 """)
             elif 1.81 <= avg_score <= 2.60:
                 st.info("""
                 ☘️ **Mức độ biểu hiện: THẤP (1,81 – 2,60)**
                 
-                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Tría troi ơi, xịn đét luôn! 👑 Tinh thần tự giác của bạn ngon lành cạ đấy. Bạn kiểm soát thời gian dùng điện thoại cực kỳ chủ động, thỉnh thoảng chỉ tò mò lướt nhẹ tí rồi ngắt ngay!
+                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Tría troi ơi, xịn đét luôn! 👑 Tinh thần tự giác của bạn ngon lành cạ đấy. Bạn kiểm soát thời gian dùng điện thoại cực kỳ chủ động.
                 
-                💡 **LỜI KHUYÊN:** Đôi lúc học hành mệt mỏi mà muốn thưởng cho bản thân vài phút giải trí thì nhớ đặt sẵn báo thức nha! Đừng để mấy quả video ngắn "thao túng tâm lý" lén lút kéo bạn vào cơn nghiện lúc nào không hay nghen! 😉⚡
+                💡 **LỜI KHUYÊN:** Đôi lúc học hành mệt mỏi mà muốn thưởng cho bản thân vài phút giải trí thì nhớ đặt sẵn báo thức nha!
                 """)
             elif 2.61 <= avg_score <= 3.40:
                 st.warning("""
                 ⚠️ **Mức độ biểu hiện: TRUNG BÌNH (2,61 – 3,40)**
                 
-                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Hơi bị báo động nhẹ rồi đấy mấy ní ơi! 🍿📱 Bạn đang bắt đầu có triệu chứng "mất kiên nhẫn" khi gặp video dài và cứ vài phút lại tay máy cầm điện thoại lên lướt rồi đó nha!
+                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Hơi bị báo động nhẹ rồi đấy mấy ní ơi! 🍿📱 Bạn đang bắt đầu có triệu chứng "mất kiên nhẫn" khi gặp video dài và cứ vài phút lại tay máy cầm điện thoại lên lướt.
                 
-                💡 **LỜI KHUYÊN:** Não đang ngỏ lời đòi hít thêm dopamine rồi! Bật ngay Tab **Tư vấn cùng Chuyên gia AI** sang chém gió với tui, hoặc bật bộ đếm ngược 15 phút detox ngay và luôn để thanh lọc lại bộ não bỏng ngô lách tách này gấp! 🛑🔥
+                💡 **LỜI KHUYÊN:** Bật ngay Tab **Tư vấn cùng Chuyên gia AI** sang chém gió hoặc bấm giờ detox ngay để thanh lọc lại bộ não bỏng ngô lách tách nhé!
                 """)
             elif 3.41 <= avg_score <= 4.20:
                 st.error("""
                 🚨 **Mức độ biểu hiện: CAO (3,41 – 4,20)**
                 
-                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Ét o ét! 😱 Báo động đỏ chói lọi! Bộ não của bạn đang nổ lách tách như ngô rang trên chảo nóng luôn rồi! Dễ mất tập trung, bồn chồn khó chịu mỗi khi thiếu điện thoại đúng không?
+                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Ét o ét! 😱 Báo động đỏ chói lọi! Bộ não của bạn đang nổ lách tách như ngô rang trên chảo nóng!
                 
-                💡 **LỜI KHUYÊN:** Dừng ngay việc lướt vô định lại! Bớt ngụp lặn trong hố đen video ngắn liền cho tui. Đứng dậy vươn vai, hít thở thật sâu, uống 1 cốc nước mát lạnh và cất điện thoại xa tầm tay ít nhất 30 phút để cứu vớt sự tập trung nha! 🧊💦
+                💡 **LỜI KHUYÊN:** Dừng ngay việc lướt vô định lại! Cất điện thoại xa tầm tay ít nhất 30 phút để cứu vớt sự tập trung nha!
                 """)
             else:
                 st.error("""
                 💥 **Mức độ biểu hiện: RẤT CAO (4,21 – 5,00)**
                 
-                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Úi dời ơi ní ơi! 💣 BỎNG NGÔ TOÀN TẬP RỒI! Bạn đang bị thế giới số và thuật toán mạng xã hội "thao túng toàn bộ hệ thần kinh" luôn rồi đó! Mất tập trung nặng, không thể ngồi yên nếu thiếu màn hình!
+                🔥 **ĐÁNH GIÁ TỪ CHUYÊN GIA GEN Z:** Úi dời ơi ní ơi! 💣 BỎNG NGÔ TOÀN TẬP RỒI! Bạn đang bị thế giới số và thuật toán mạng xã hội "thao túng toàn bộ hệ thần kinh"!
                 
-                💡 **LỜI KHUYÊN PHÁT CẤP:** Ngay lập tức TẮT MÀN HÌNH MÁY TÍNH / ĐIỆN THOẠI! Đứng dậy đi dạo, nhìn ra ngoài cửa sổ ngắm cây xanh hoặc đi trò chuyện trực tiếp với ai đó. Bạn cần một chiến dịch "Digital Detox" khẩn cấp ngay hôm nay! 🛑📱💥
+                💡 **LỜI KHUYÊN PHÁT CẤP:** Ngay lập tức TẮT MÀN HÌNH! Bạn cần một chiến dịch "Digital Detox" khẩn cấp ngay hôm nay!
                 """)
