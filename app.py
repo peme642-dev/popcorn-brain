@@ -353,8 +353,8 @@ with tab3:
     </div>
     """, unsafe_allow_html=True)
 
-    scale_map = {"A (1đ)": 1, "B (2đ)": 2, "C (3đ)": 3, "D (4đ)": 4, "E (5đ)": 5}
-    options_list = ["A (1đ)", "B (2đ)", "C (3đ)", "D (4đ)", "E (5đ)"]
+    scale_map = {"A: Hoàn toàn không đúng": 1, "B: Chỉ có vài ý đúng": 2, "C: Trung bình": 3, "D: Đúng khá nhiều": 4, "E: Hoàn toàn đúng": 5}
+    options_list = ["A: Hoàn toàn không đúng", "B: Chỉ có vài ý đúng", "C: Trung bình", "D: Đúng khá nhiều", "E: Hoàn toàn đúng"]
 
     with st.form("survey_form"):
         st.markdown("### 1. Khả năng duy trì sự tập trung")
